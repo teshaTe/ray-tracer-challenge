@@ -21,12 +21,21 @@ public:
     Vector3(const Vector3<T>& v) { m_vec[0] = v.x(); m_vec[1] = v.y(); m_vec[2] = v.z(); }
 
     T& operator[](int i) { return m_vec[i]; }
+    Vector3<T> operator=(const Vector3<T>& v) const { this->m_vec = v.m_vec; }
     Vector3<T> operator+(const Vector3<T>& v) const { return Vector3<T>(this->m_vec[0]+v.x(), this->m_vec[1]+v.y(), this->m_vec[2]+v.z()); }
     Vector3<T> operator-(const Vector3<T>& v) const { return Vector3<T>(this->m_vec[0]-v.x(), this->m_vec[1]-v.y(), this->m_vec[2]-v.z()); }
-    Vector3<T> operator-(Vector3<T> v) const { return Vector3<T>(-v.x(), -v.y(), -v.z()); }
     Vector3<T> operator*(const T s) const { return Vector3<T>(this->m_vec[0]*s, this->m_vec[1]*s, this->m_vec[2]*s); }
     Vector3<T> operator/(const T s) const { return Vector3<T>(this->m_vec[0]/s, this->m_vec[1]/s, this->m_vec[2]/s); }
 
+    bool operator==(const Vector3<T>& v) const
+    {
+        const double eps{0.00001};
+        std::array<T, 3> diff{m_vec[0] - v.m_vec[0], m_vec[1] - v.m_vec[1], m_vec[2] - v.m_vec[2]};
+        if((std::abs(diff[0]) < eps) && (std::abs(diff[1]) < eps) && (std::abs(diff[2]) < eps))
+            return true;
+        else
+            return false;
+    }
 
     int size() const { return m_vec.size(); }
     T dot(const Vector3<T>& v) const { return m_vec[0] * v.x() + m_vec[1] * v.y() + m_vec[2] * v.z(); }
