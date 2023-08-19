@@ -12,16 +12,15 @@ template <class T>
 class Vector3
 {
 private:
-    std::array<T, 3> m_vec={0, 0, 0};
+    std::array<T, 3> m_vec;
     double _magnitude() const {  }
 
 public:
-    Vector3() = default;
-    Vector3(const T x, const T y, const T z) { m_vec = {x, y, z}; }
+    Vector3(): m_vec({0, 0, 0}) {}
+    Vector3(const T x, const T y, const T z) { m_vec.swap(std::array<T, 3>{x, y, z}); }
     Vector3(const Vector3<T>& v) { m_vec[0] = v.x(); m_vec[1] = v.y(); m_vec[2] = v.z(); }
 
     T operator[](int i) const { return m_vec[i]; }
-    Vector3<T> operator=(const Vector3<T>& v) const { this->m_vec = v.m_vec; }
     Vector3<T> operator+(const Vector3<T>& v) const { return Vector3<T>(this->m_vec[0]+v.x(), this->m_vec[1]+v.y(), this->m_vec[2]+v.z()); }
     Vector3<T> operator-(const Vector3<T>& v) const { return Vector3<T>(this->m_vec[0]-v.x(), this->m_vec[1]-v.y(), this->m_vec[2]-v.z()); }
     Vector3<T> operator*(const T s) const { return Vector3<T>(this->m_vec[0]*s, this->m_vec[1]*s, this->m_vec[2]*s); }
@@ -35,6 +34,12 @@ public:
             return true;
         else
             return false;
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Vector3<T>& v)
+    {
+        os << "[" << v.x() << ", " << v.y() << ", " << v.z() << "]";
+        return os;
     }
 
     int size() const { return m_vec.size(); }
@@ -71,7 +76,6 @@ public:
     Vector4(const Vector4<T>& v) { m_vec[0] = v.x(); m_vec[1] = v.y(); m_vec[2] = v.z(); m_vec[3] = v.w(); }
 
     T operator[](int i) const { return m_vec[i]; }
-    Vector4<T> operator=(const Vector4<T>& v) const { this->m_vec = v.m_vec; }
     Vector4<T> operator+(const Vector4<T>& v) const { return Vector4<T>(this->m_vec[0]+v.x(), this->m_vec[1]+v.y(), this->m_vec[2]+v.z(), this->m_vec[3]+v.w()); }
     Vector4<T> operator-(const Vector4<T>& v) const { return Vector4<T>(this->m_vec[0]-v.x(), this->m_vec[1]-v.y(), this->m_vec[2]-v.z(), this->m_vec[3]-v.w()); }
     Vector4<T> operator*(const T s) const { return Vector4<T>(this->m_vec[0]*s, this->m_vec[1]*s, this->m_vec[2]*s, this->m_vec[3]*s); }
