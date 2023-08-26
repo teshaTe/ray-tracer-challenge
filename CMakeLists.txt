@@ -14,7 +14,8 @@ set(CMAKE_CXX_STANDARD 17)
 ####################### ESSENTIAL INCLUDES/PROJECT FILES ##########################
 
 set(CONTAINERS Containers/Vector.hpp
-               Containers/Matrix.hpp)
+               Containers/Matrix.hpp
+               Containers/Color.hpp)
 
 enable_testing()
 add_subdirectory(tests)
