@@ -18,11 +18,11 @@ private:
 public:
     Vector3(): m_vec({0, 0, 0}) {}
     Vector3(const T x, const T y, const T z) { m_vec.swap(std::array<T, 3>{x, y, z}); }
-    Vector3(const Vector3<T>& v) { m_vec[0] = v.x(); m_vec[1] = v.y(); m_vec[2] = v.z(); }
+    Vector3(const Vector3<T>& other) { m_vec[0] = other.x(); m_vec[1] = other.y(); m_vec[2] = other.z(); }
 
     T operator[](int i) const { return m_vec[i]; }
-    Vector3<T> operator+(const Vector3<T>& v) const { return Vector3<T>(this->m_vec[0]+v.x(), this->m_vec[1]+v.y(), this->m_vec[2]+v.z()); }
-    Vector3<T> operator-(const Vector3<T>& v) const { return Vector3<T>(this->m_vec[0]-v.x(), this->m_vec[1]-v.y(), this->m_vec[2]-v.z()); }
+    Vector3<T> operator+(const Vector3<T>& other) const { return Vector3<T>(this->m_vec[0]+other.x(), this->m_vec[1]+other.y(), this->m_vec[2]+other.z()); }
+    Vector3<T> operator-(const Vector3<T>& other) const { return Vector3<T>(this->m_vec[0]-other.x(), this->m_vec[1]-other.y(), this->m_vec[2]-other.z()); }
     Vector3<T> operator*(const T s) const { return Vector3<T>(this->m_vec[0]*s, this->m_vec[1]*s, this->m_vec[2]*s); }
     Vector3<T> operator/(const T s) const { return Vector3<T>(this->m_vec[0]/s, this->m_vec[1]/s, this->m_vec[2]/s); }
 
@@ -43,12 +43,12 @@ public:
     }
 
     int size() const { return m_vec.size(); }
-    auto dot(const Vector3<T>& v) const { return m_vec[0] * v.x() + m_vec[1] * v.y() + m_vec[2] * v.z(); }
+    auto dot(const Vector3<T>& other) const { return m_vec[0] * other.x() + m_vec[1] * other.y() + m_vec[2] * other.z(); }
     auto magnitude() const { return std::sqrt(m_vec[0]*m_vec[0] + m_vec[1]*m_vec[1] + m_vec[2]*m_vec[2]); }
 
-    Vector3<T> cross(const Vector3<T>& v) const { return Vector3<T>(m_vec[1] * v.z() - m_vec[2] * v.y(),
-                                                                    m_vec[2] * v.x() - m_vec[0] * v.z(),
-                                                                    m_vec[0] * v.y() - m_vec[1] * v.x()); }
+    Vector3<T> cross(const Vector3<T>& other) const { return Vector3<T>(m_vec[1] * other.z() - m_vec[2] * other.y(),
+                                                                        m_vec[2] * other.x() - m_vec[0] * other.z(),
+                                                                        m_vec[0] * other.y() - m_vec[1] * other.x()); }
 
     Vector3<T> normalize() const { return Vector3<T>(m_vec[0] / static_cast<T>(magnitude()),
                                                      m_vec[1] / static_cast<T>(magnitude()),
