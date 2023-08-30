@@ -1,7 +1,14 @@
 #include <gtest/gtest.h>
 #include "Color.hpp"
 
-using namespace math_types;
+using namespace ray_tracer;
+
+TEST(ColorAssignment, TestingColor_assignment)
+{
+    const Color<int> col_ref;
+    const Color<int> test{0, 0, 0};
+    ASSERT_EQ(col_ref, test);
+}
 
 TEST(AddingColorsTest, TestingColor_sum)
 {
