@@ -17,7 +17,7 @@ set(CONTAINERS Containers/Vector.hpp
                Containers/Matrix.hpp
                Containers/Color.hpp)
 
-set(RAYTRACER_SOURCE RayTracer/RenderingCanvas.hpp)
+set(RAYTRACER_SOURCE RayTracer/Canvas.hpp)
 
 enable_testing()
 add_subdirectory(tests)
