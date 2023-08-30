@@ -12,7 +12,7 @@ template <class T>
 class Vector3
 {
 private:
-    std::array<T, 3> m_vec;
+    std::array<T, 3> m_vec{0, 0, 0};
     double _magnitude() const {  }
 
 public:
@@ -20,7 +20,7 @@ public:
     Vector3(const T x, const T y, const T z) { m_vec.swap(std::array<T, 3>{x, y, z}); }
     Vector3(const Vector3<T>& other) { m_vec[0] = other.x(); m_vec[1] = other.y(); m_vec[2] = other.z(); }
 
-    T operator[](int i) const { return m_vec[i]; }
+    T &operator[](int i) { return m_vec[i]; }
     Vector3<T> operator+(const Vector3<T>& other) const { return Vector3<T>(this->m_vec[0]+other.x(), this->m_vec[1]+other.y(), this->m_vec[2]+other.z()); }
     Vector3<T> operator-(const Vector3<T>& other) const { return Vector3<T>(this->m_vec[0]-other.x(), this->m_vec[1]-other.y(), this->m_vec[2]-other.z()); }
     Vector3<T> operator*(const T s) const { return Vector3<T>(this->m_vec[0]*s, this->m_vec[1]*s, this->m_vec[2]*s); }

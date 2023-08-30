@@ -14,7 +14,7 @@ template<class T>
 class Color
 {
 private:
-    Vector3<T> m_color;
+    Vector3<T> m_color{0, 0, 0};
 
 public:
     Color():m_color({0, 0, 0}) {}
@@ -22,7 +22,7 @@ public:
     Color(const Vector3<T> color) { m_color = color; }
     Color(const Color<T>& other) { this->m_color = other.m_color; }
 
-    T operator[](int i) const { return m_color[i]; }
+    T &operator[](int i) { return m_color[i]; }
 
     Color<T> operator+(const Color<T>& other) const
     {
@@ -51,11 +51,17 @@ public:
     bool operator==(const Color<T>& other) const
     {
         const double eps{0.00001};
-        std::array<T, 3> diff{m_color[0] - other.m_color[0], m_color[1] - other.m_color[1], m_color[2] - other.m_color[2]};
-        if((std::abs(diff[0]) < eps) && (std::abs(diff[1]) < eps) && (std::abs(diff[2]) < eps))
+        Vector3<T> diff = m_color - other.m_color;
+        if((std::abs(diff.x()) < eps) && (std::abs(diff.y()) < eps) && (std::abs(diff.z()) < eps))
             return true;
         else
             return false;
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Color<T>& v)
+    {
+        os << "[" << v.r() << ", " << v.g() << ", " << v.b() << "]";
+        return os;
     }
 
     Color<T> hadamard_product(const Color<T>& other) const
