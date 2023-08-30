@@ -17,10 +17,12 @@ set(CONTAINERS Containers/Vector.hpp
                Containers/Matrix.hpp
                Containers/Color.hpp)
 
+set(RAYTRACER_SOURCE RayTracer/RenderingCanvas.hpp)
+
 enable_testing()
 add_subdirectory(tests)
 
 ############################ CREATING EXECUTABLES TO RUN ##########################
 
-add_executable(ProjectileSample "${PROJECT_ROOT_DIR}/Samples/projectile_gen_sample.cpp" ${CONTAINERS})
-add_executable(RayTracer ray_tracer.cpp ${CONTAINERS})
+add_executable(ProjectileSample "${PROJECT_ROOT_DIR}/Samples/projectile_gen_sample.cpp" ${CONTAINERS} ${RAYTRACER_SOURCE})
+add_executable(RayTracer ray_tracer.cpp ${CONTAINERS} ${RAYTRACER_SOURCE})
