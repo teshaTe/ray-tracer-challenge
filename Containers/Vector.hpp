@@ -5,8 +5,8 @@
 #include <cmath>
 #include <iostream>
 
-namespace math_types {
 
+namespace ray_tracer {
 
 template <class T>
 class Vector3
@@ -98,10 +98,9 @@ public:
     T w() const { return m_vec[3]; }
 
     ~Vector4() = default;
-
 };
 
-} // namespace math_types
+} // namespace ray_tracer
 
 
 #endif // VECTOR_HPP
