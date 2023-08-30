@@ -27,3 +27,8 @@ add_executable(color_test color_container_tests.cpp)
 target_include_directories(color_test PUBLIC "${PROJECT_ROOT_DIR}/Containers")
 target_link_libraries(color_test PRIVATE GTest::GTest)
 add_test(color_gtest color_test)
+
+add_executable(canvas_test canvas_tests.cpp)
+target_include_directories(canvas_test PUBLIC "${PROJECT_ROOT_DIR}/Containers" "${PROJECT_ROOT_DIR}/RayTracer")
+target_link_libraries(canvas_test PRIVATE GTest::GTest)
+add_test(canvas_gtest canvas_test)
