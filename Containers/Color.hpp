@@ -8,10 +8,7 @@
 #include "Vector.hpp"
 
 
-// TODO: color_checker call in the constructor creates an infinite loop - FIX it
-
-
-namespace math_types {
+namespace ray_tracer {
 
 template<class T>
 class Color
@@ -25,6 +22,7 @@ public:
     Color(const Vector3<T> color) { m_color = color; }
     Color(const Color<T>& other) { this->m_color = other.m_color; }
 
+    T operator[](int i) const { return m_color[i]; }
 
     Color<T> operator+(const Color<T>& other) const
     {
@@ -74,7 +72,7 @@ public:
 
 };
 
-} // namespace math_types
+} // namespace ray_tracer
 
 
 #endif // COLOR_HPP
