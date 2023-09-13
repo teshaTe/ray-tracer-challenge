@@ -5,8 +5,10 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <typeinfo>
 #include <utility>
+#include <numeric>
 
 
 namespace ray_tracer {
@@ -31,6 +33,8 @@ public:
             m_max_col_val = 255;
     }
 
+    Canvas(const std::vector<Color<T>>& colors_arr) { m_canvas = colors_arr; }
+
     Canvas(const Canvas& other)
     {
         this->m_canvas = other.m_canvas;
@@ -40,6 +44,34 @@ public:
     }
 
     Color<T>& operator[](int i) { return m_canvas[i]; }
+
+    bool operator==(const Canvas<T>& other) const
+    {
+        const double eps{0.00001};
+        std::vector<Color<T>> diff;
+        diff.resize(m_canvas.size());
+        T total_r{0};
+        T total_g{0};
+        T total_b{0};
+
+        for(size_t i = 0; i < m_canvas.size(); i++)
+        {
+            total_r += m_canvas[i].r() - other.m_canvas[i].r();
+            total_g += m_canvas[i].g() - other.m_canvas[i].g();
+            total_b += m_canvas[i].b() - other.m_canvas[i].b();
+        }
+
+        total_r /= static_cast<double>(diff.size());
+        total_g /= static_cast<double>(diff.size());
+        total_b /= static_cast<double>(diff.size());
+
+        std::cout << total_r << " " << total_g << " " << total_b << std::endl;
+
+        if( total_r < eps && total_g < eps && total_b < eps)
+            return true;
+        else
+            return false;
+    }
 
     T clip(T val)
     {
@@ -77,7 +109,7 @@ public:
         {
             std::string out_path = output_path + "\\" + file_name + ".ppm";
             std::ofstream file;
-            file.open(out_path, std::ios_base::app);
+            file.open(out_path);
             file.exceptions(std::ifstream::eofbit | std::ifstream::failbit | std::ifstream::badbit);
 
             // writing ppm header of the file
@@ -99,7 +131,8 @@ public:
 
             file << std::endl;
             file.close();
-        } catch(std::ifstream::failure const &e)
+        }
+        catch(std::ifstream::failure const &e)
         {
             std::cerr << "Exception: " << e.what() << std::endl;
         }
@@ -108,18 +141,67 @@ public:
     Canvas<T> load_ppm(const std::string& file_name, const std::string& path)
     {
         try {
-            std::string in_path = path + "/" + file_name + ".ppm";
-            std::ifstream file;
-            file.open(in_path, std::ios_base::in);
+            std::string in_path = path + "\\" + file_name + ".ppm";
+            std::ifstream file(in_path.c_str());
             file.exceptions(std::ifstream::eofbit | std::ifstream::failbit | std::ifstream::badbit);
-            std::string data;
-            file >> data;
+            std::vector<std::string> header;
+            for (int i=0; i<4; i++)
+            {
+                std::string line;
+                std::getline(file, line);
+                header.push_back(line);
+            }
+
+            std::vector<std::string> img_size = SplitString(header[1], ' ');
+//            std::cout << "w = " << img_size[0] << "; h = " << img_size[1] << std::endl;
+//            std::cout << header[2] << std::endl;
+
+            int width = std::stoi(img_size[0]);
+            int height = std::stoi(img_size[1]);
+            float max_col_val = std::stof(header[2]);
+
+            Canvas<T> canvas{width, height};
+
+            std::vector<std::string> lines;
+            for(int i = 0; i < height; i++)
+            {
+                std::string line;
+                std::getline(file, line);
+                std::vector<std::string> row = SplitString(line, ' ');
+                for(int j = 0; j < row.size()-2; j+=3)
+                {
+                    T r = static_cast<T>(std::stof(row[j]));
+                    T g = static_cast<T>(std::stof(row[j+1]));
+                    T b = static_cast<T>(std::stof(row[j+2]));
+                    Color<T> c{r, g, b};
+                    canvas.set_pixel(j/3, i, c);
+                }
+            }
 
             file.close();
+            return canvas;
+
         } catch (std::ifstream::failure const &e) {
             std::cerr << "Exception: " << e.what() << std::endl;
         }
-        return ;
+        return Canvas<T>{0, 0};
+    }
+
+    std::vector<std::string> SplitString(const std::string &strInput, char cDelimiter)
+    {
+        std::vector<std::string> vRetValue;
+
+        std::stringstream ss(strInput);
+        std::string strItem;
+        while(std::getline(ss, strItem, cDelimiter))
+        {
+            // Skip Empty
+            if(strItem.size()==0)
+                continue;
+            vRetValue.push_back(strItem);
+        }
+
+        return vRetValue;
     }
 
     int get_canvas_width() const { return m_width; }
