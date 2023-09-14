@@ -23,6 +23,11 @@ target_include_directories(vector4_test PUBLIC "${PROJECT_ROOT_DIR}/Containers")
 target_link_libraries(vector4_test PRIVATE GTest::GTest)
 add_test(vector4_gtest vector4_test)
 
+add_executable(matrix_test matrix_container_tests.cpp)
+target_include_directories(matrix_test PUBLIC "${PROJECT_ROOT_DIR}/Containers")
+target_link_libraries(matrix_test PRIVATE GTest::GTest)
+add_test(matrix_gtest matrix_test)
+
 add_executable(color_test color_container_tests.cpp)
 target_include_directories(color_test PUBLIC "${PROJECT_ROOT_DIR}/Containers")
 target_link_libraries(color_test PRIVATE GTest::GTest)
