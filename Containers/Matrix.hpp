@@ -18,7 +18,7 @@ private:
     typedef typename std::vector<std::vector<T>>::const_iterator const_iterator;
 
 public:
-    Matrix(const int rows, const int cols, const std::vector<std::vector<T>>& data=nullptr): m_rows{rows}, m_cols{cols}
+    Matrix(const int rows, const int cols, const std::vector<std::vector<T>> *data = nullptr): m_rows{rows}, m_cols{cols}
     {
         m_mat.resize(rows);
         for(auto &c : m_mat)
@@ -27,8 +27,9 @@ public:
             std::fill(c.begin(), c.end(), 0);
         }
 
-        if(data != nullptr && data.size() == rows && data[0].size() == cols)
-            m_mat = data;
+        if(data != nullptr)
+            if(data->size() == rows && data[0].size() == cols)
+                m_mat = *data;
     }
 
     Matrix(const Matrix<T>& other) { this->m_mat = other.m_mat; }
@@ -37,51 +38,57 @@ public:
 
     Matrix<T> operator+(const Matrix<T>& other)
     {
-        static_assert(m_mat.size() == other.m_mat.size());
-        static_assert(m_cols == other.m_cols);
-        static_assert(m_rows == other.m_rows);
-        for(size_t r = 0; r < m_mat.size(); ++r)
-            std::transform(m_mat[r].begin(), m_mat[r].end(), other.m_mat[r].begin(), m_mat[r].begin(), std::plus<T>());
-        return Matrix<T>(m_rows, m_cols, m_mat);
+        if(this->m_cols == other.m_cols && this->m_rows == other.m_rows)
+        {
+            for(size_t r = 0; r < m_mat.size(); ++r)
+                std::transform(m_mat[r].begin(), m_mat[r].end(), other.m_mat[r].begin(), m_mat[r].begin(), std::plus<T>());
+            return Matrix<T>(m_rows, m_cols, &m_mat);
+        }
+        else
+            throw("Sizes of two matrices are mismatched");
     }
     Matrix<T> operator-(const Matrix<T>& other)
     {
-        static_assert(m_mat.size() == other.m_mat.size());
-        static_assert(m_cols == other.m_cols);
-        static_assert(m_rows == other.m_rows);
-        for(size_t r = 0; r < m_mat.size(); ++r)
-            std::transform(m_mat[r].begin(), m_mat[r].end(), other.m_mat[r].begin(), m_mat[r].begin(), std::minus<T>());
-        return Matrix<T>(m_rows, m_cols, m_mat);
+        if(this->m_cols == other.m_cols && this->m_rows == other.m_rows)
+        {
+            for(size_t r = 0; r < m_mat.size(); ++r)
+                std::transform(m_mat[r].begin(), m_mat[r].end(), other.m_mat[r].begin(), m_mat[r].begin(), std::minus<T>());
+            return Matrix<T>(m_rows, m_cols, &m_mat);
+        }
+        else
+            throw("Sizes of two matrices are mismatched");
     }
     Matrix<T> operator/(const T scalar)
     {
         for(size_t r = 0; r < m_mat.size(); ++r)
             std::transform(m_mat[r].begin(), m_mat[r].end(), m_mat[r].begin(), [scalar](T &e){ return e/scalar; });
-        return Matrix<T>(m_rows, m_cols, m_mat);
+        return Matrix<T>(m_rows, m_cols, &m_mat);
     }
 
     Matrix<T> operator*(const T scalar)
     {
         for(size_t r = 0; r < m_mat.size(); ++r)
             std::transform(m_mat[r].begin(), m_mat[r].end(), m_mat[r].begin(), [scalar](T &e){ return e*scalar; });
-        return Matrix<T>(m_rows, m_cols, m_mat);
+        return Matrix<T>(m_rows, m_cols, &m_mat);
     }
 
-    bool operator==(const Matrix<T>&  other)
+    bool operator==(const Matrix<T>& other) const
     {
-        static_assert(m_mat.size() == other.m_mat.size());
-        static_assert(m_cols == other.m_cols);
-        static_assert(m_rows == other.m_rows);
-        const double eps{0.00001};
-        Matrix<T> diff(m_rows, m_cols);
-        for(size_t r = 0; r < m_mat.size(); ++r)
+        if(this->m_cols == other.m_cols && this->m_rows == other.m_rows)
         {
-            std::transform(m_mat[r].begin(), m_mat[r].end(), other.m_mat[r].begin(), diff.m_mat[r].begin(), std::minus<T>());
-            bool ok = std::all_of(diff.m_mat[r].begin(), diff.m_mat[r].end(), [eps](T e) { return e < eps; });
-            if(!ok)
-                return false;
+            const double eps{0.00001};
+            Matrix<T> diff(m_rows, m_cols);
+            for(size_t r = 0; r < m_mat.size(); ++r)
+            {
+                std::transform(m_mat[r].begin(), m_mat[r].end(), other.m_mat[r].begin(), diff.m_mat[r].begin(), std::minus<T>());
+                bool ok = std::all_of(diff.m_mat[r].begin(), diff.m_mat[r].end(), [eps](T e) { return e < eps; });
+                if(!ok)
+                    return false;
+            }
+            return true;
         }
-        return true;
+        else
+            throw("Sizes of two matrices are mismatched");
     }
 
     iterator begin() { return m_mat.begin(); }
@@ -107,11 +114,11 @@ public:
     {
 
     }
-    Matrix<T> comp_minor()
+    Matrix<T> compute_minor()
     {
 
     }
-    Matrix<T> comp_cofactor()
+    Matrix<T> compute_cofactor()
     {
 
     }
