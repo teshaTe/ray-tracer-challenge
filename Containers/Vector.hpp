@@ -13,7 +13,6 @@ class Vector3
 {
 private:
     std::array<T, 3> m_vec{0, 0, 0};
-    double _magnitude() const {  }
 
 public:
     Vector3(): m_vec({0, 0, 0}) {}
