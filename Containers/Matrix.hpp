@@ -1,6 +1,7 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
 
+#include <iostream>
 #include <vector>
 #include <algorithm>
 
@@ -32,7 +33,13 @@ public:
                 m_mat = *data;
     }
 
-    Matrix(const Matrix<T>& other) { this->m_mat = other.m_mat; }
+    Matrix(const Matrix<T>& other) { this->m_mat = other.m_mat; m_rows = other.m_rows; m_cols = other.m_cols; }
+
+    iterator begin() { return m_mat.begin(); }
+    const_iterator begin() const { return m_mat.begin(); }
+
+    iterator end() { return m_mat.end(); }
+    const_iterator end() const { return m_mat.end(); }
 
     T& operator()(int i, int j) { return m_mat[i][j]; }
 
@@ -91,11 +98,32 @@ public:
             throw("Sizes of two matrices are mismatched");
     }
 
-    iterator begin() { return m_mat.begin(); }
-    const_iterator begin() const { return m_mat.begin(); }
+    friend std::ostream& operator<<(std::ostream& os, Matrix<T>& m)
+    {
+        for(int i = 0; i < m.m_rows; ++i)
+        {
+            for(int j = 0; j < m.m_cols; ++j)
+                os << m(i, j) << " ";
+            os << std::endl;
+        }
+        return os;
+    }
 
-    iterator end() { return m_mat.end(); }
-    const_iterator end() const { return m_mat.end(); }
+    Matrix<T> mul(const Matrix<T>& mat)
+    {
+        if(m_cols == mat.m_rows)
+        {
+            Matrix<T> res{m_rows, mat.m_cols};
+
+            for(size_t r = 0; r < m_rows; ++r)
+                for(size_t c = 0; c < mat.m_cols; ++c)
+                    for(size_t i = 0; i < mat.m_rows; ++i)
+                        res(r, c) += m_mat[r][i] * mat.m_mat[i][c];
+            return res;
+        }
+        else
+            throw("Matrix dimesnions misalignment was detected. m1.cols != m2.rows!");
+    }
 
     void I()
     {
@@ -131,11 +159,6 @@ public:
             std::transform(m_mat[r].begin()+col, m_mat[r].end(), tmp.m_mat[i].begin(), [](T e){ return e; });
 
         return tmp;
-    }
-
-    Matrix<T> mul(const Matrix<T> mat)
-    {
-
     }
 
     ~Matrix() = default;
