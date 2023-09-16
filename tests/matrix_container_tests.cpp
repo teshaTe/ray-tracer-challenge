@@ -88,10 +88,31 @@ TEST(IdentityMatrixTest, TestingIdentityMatrix)
      ASSERT_EQ(m1, m_ref);
 }
 
-//TEST(MultiplyMatricesTest, TestingMatrices_multi)
-//{
+TEST(MultiplyMatricesTest, TestingMatrices_multi)
+{
+     std::vector<std::vector<float>> data1{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 8, 7, 6}, {5, 4, 3, 2}};
+     std::vector<std::vector<float>> data2{{-2, 1, 2, 3}, {3, 2, 1, -1}, {4, 3, 6, 5}, {1, 2, 7, 8}};
 
-//}
+     Matrix<float> m1{4, 4, &data1};
+     Matrix<float> m2{4, 4, &data2};
+     Matrix<float> m3 = m1.mul(m2);
+
+     std::vector<std::vector<float>> data_ref1{{20, 22, 50, 48}, {44, 54, 114, 108}, {40, 58, 110, 102}, {16, 26, 46, 42}};
+     Matrix<float> m_ref1{4, 4, &data_ref1};
+
+     ASSERT_EQ(m3, m_ref1);
+
+     std::vector<std::vector<float>> data3{{1, 2, 3}, {5, 6, 7}, {9, 8, 7}};
+     std::vector<std::vector<float>> data4{{-2, 1}, {3, 2}, {4, 3}};
+     Matrix<float> m4{3, 3, &data3};
+     Matrix<float> m5{3, 2, &data4};
+     Matrix<float> m6 = m4.mul(m5);
+
+     std::vector<std::vector<float>> data_ref2{{16, 6}, {46, 38}, {27, 46}};
+     Matrix<float> m_ref2{3, 2, &data_ref2};
+     ASSERT_EQ(m6, m_ref2);
+
+}
 
 //TEST(EqualityMatricesTest, TestingMatrices_equal)
 //{
