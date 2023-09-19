@@ -274,6 +274,12 @@ public:
         return Vector<T>{tmp};
     }
 
+    /**
+     * @brief data
+     * @return
+     */
+    std::vector<T> data() const { return m_vec; }
+
     ~Vector() = default;
 };
 
