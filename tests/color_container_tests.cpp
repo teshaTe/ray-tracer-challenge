@@ -73,14 +73,14 @@ TEST(DivideColorsTest, TestingColor_divide_by_scalar)
 TEST(HadamardMultiColorsTest, TestingColor_hadamard_prod)
 {
     const Color<int> color1_ref_i{100, 90, 120};
-    const Color<int> c1_i{10, 30, 60};
-    const Color<int> c2_i{10, 3, 2};
+    Color<int> c1_i{10, 30, 60};
+    Color<int> c2_i{10, 3, 2};
     const Color<int> res1_i = c1_i.hadamard_product(c2_i);
     ASSERT_EQ(color1_ref_i, res1_i);
 
     const Color<float> color3_ref_f{1.0, 0.3, 0.6};
-    const Color<float> c1_f{0.5, 0.1, 0.3};
-    const Color<float> c2_f{2.0, 3.0, 2.0};
+    Color<float> c1_f{0.5, 0.1, 0.3};
+    Color<float> c2_f{2.0, 3.0, 2.0};
     const Color<float> res3_f = c1_f.hadamard_product(c2_f);
     ASSERT_EQ(color3_ref_f, res3_f);
 }
