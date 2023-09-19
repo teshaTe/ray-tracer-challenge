@@ -13,15 +13,10 @@ add_library(GTest::GTest INTERFACE IMPORTED)
 target_link_libraries(GTest::GTest INTERFACE gtest_main)
 
 
-add_executable(vector3_test vector3_container_tests.cpp)
-target_include_directories(vector3_test PUBLIC "${PROJECT_ROOT_DIR}/Containers")
-target_link_libraries(vector3_test PRIVATE GTest::GTest)
-add_test(vector3_gtest vector3_test)
-
-add_executable(vector4_test vector4_container_tests.cpp)
-target_include_directories(vector4_test PUBLIC "${PROJECT_ROOT_DIR}/Containers")
-target_link_libraries(vector4_test PRIVATE GTest::GTest)
-add_test(vector4_gtest vector4_test)
+add_executable(vector_test vector_container_tests.cpp)
+target_include_directories(vector_test PUBLIC "${PROJECT_ROOT_DIR}/Containers")
+target_link_libraries(vector_test PRIVATE GTest::GTest)
+add_test(vector_gtest vector_test)
 
 add_executable(matrix_test matrix_container_tests.cpp)
 target_include_directories(matrix_test PUBLIC "${PROJECT_ROOT_DIR}/Containers")
