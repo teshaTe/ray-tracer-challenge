@@ -112,6 +112,14 @@ TEST(MultiplyMatricesTest, TestingMatrices_multi)
      Matrix<float> m_ref2{3, 2, &data_ref2};
      ASSERT_EQ(m6, m_ref2);
 
+     std::vector<std::vector<float>> data5{{1, 2, 3, 4}, {2, 4, 4, 2}, {8, 6, 4 ,1}, {0, 0, 0, 1}};
+     Matrix<float> m7{4, 4, &data5};
+     Vector<float> vec{1, 2, 3, 1};
+
+     std::vector<std::vector<float>> data_ref3{{18, 24, 33, 1}};
+     Matrix<float> m_ref3{4, 1, &data_ref3};
+     Matrix<float> m8 = m7.mul(vec);
+     ASSERT_EQ(m8, m_ref3);
 }
 
 //TEST(EqualityMatricesTest, TestingMatrices_equal)
@@ -119,10 +127,24 @@ TEST(MultiplyMatricesTest, TestingMatrices_multi)
 
 //}
 
-//TEST(TransposeMatrixTest, TestingMatrix_transpose)
-//{
+TEST(TransposeMatrixTest, TestingMatrix_transpose)
+{
+     std::vector<std::vector<float>> data1{{0, 9, 3, 0}, {9, 8, 0, 8}, {1, 8, 5, 3}, {0, 0 ,5, 8}};
+     Matrix<float> m1{4, 4, &data1};
+     Matrix<float> m2 = m1.tr();
 
-//}
+     std::vector<std::vector<float>> data_ref1{{0, 9, 1, 0}, {9, 8, 8, 0}, {3, 0, 5, 5}, {0, 8, 3, 8}};
+     Matrix<float> m_ref1{4, 4, &data_ref1};
+     ASSERT_EQ(m2, m_ref1);
+
+     std::vector<std::vector<float>> data2{{0, 9, 3}, {9, 8, 0}, {1, 8, 5}, {0, 0 ,5}};
+     Matrix<float> m3{4, 3, &data1};
+     Matrix<float> m4 = m3.tr();
+
+     std::vector<std::vector<float>> data_ref2{{0, 9, 1}, {9, 8, 8}, {3, 0, 5}, {0, 8, 3}};
+     Matrix<float> m_ref2{3, 4, &data_ref1};
+     ASSERT_EQ(m4, m_ref2);
+}
 
 //TEST(invertMatrixTest, TestingMatrix_invert)
 //{
