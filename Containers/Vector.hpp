@@ -81,7 +81,7 @@ public:
         if(v.size() > 1 && v.size() < 5)
             m_vec = v;
         else
-            std::cerr << "Specified vector size is unsupported by this class. Supported sizes are: 2, 3, 4." << std::endl;
+            throw std::runtime_error( "Specified vector size is unsupported by this class. Supported sizes are: 2, 3, 4.");
     }
 
     /**
@@ -203,9 +203,8 @@ public:
             std::fill(m_vec.begin(), m_vec.end(), m_zero);
         }
         else
-            std::cerr << "[ERROR] Cannot create vector of size 5 or more!" << std::endl;
+            throw std::runtime_error("[ERROR] Cannot create vector of size 5 or more!");
     }
-
 
     /**
      * @brief dot
