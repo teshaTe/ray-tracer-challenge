@@ -1,9 +1,9 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
 
-#include <iostream>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 #include "Vector.hpp"
 
 
@@ -32,7 +32,7 @@ public:
      * @param cols
      * @param data
      */
-    Matrix(const int rows, const int cols, const std::vector<std::vector<T>> *data = nullptr): m_rows{rows}, m_cols{cols}
+    Matrix(const int rows, const int cols): m_rows{rows}, m_cols{cols}
     {
         m_mat.resize(rows);
         for(auto &c : m_mat)
@@ -40,10 +40,15 @@ public:
             c.resize(cols);
             std::fill(c.begin(), c.end(), m_zero);
         }
+    }
 
-        if(data != nullptr)
-            if(data->size() == rows && data[0].size() == cols)
-                m_mat = *data;
+    Matrix(const int rows, const int cols, const std::vector<std::vector<T>>& data): m_rows{rows}, m_cols{cols}
+    {
+
+        if(data.size() == rows && std::all_of(data.begin(), data.end(), [cols](std::vector<T> e) { return e.size() == cols; }))
+            m_mat = data;
+        else
+            throw std::runtime_error("[ERROR] Cannot assign data to the Matrix. Wrong size!");
     }
 
     /**
@@ -83,6 +88,7 @@ public:
      * @return
      */
     T& operator()(int i, int j) { return m_mat[i][j]; }
+    const T& operator()(int i, int j) const { return m_mat[i][j]; }
 
     /**
      * @brief operator +
@@ -95,10 +101,10 @@ public:
         {
             for(size_t r = 0; r < m_mat.size(); ++r)
                 std::transform(m_mat[r].begin(), m_mat[r].end(), other.m_mat[r].begin(), m_mat[r].begin(), std::plus<T>());
-            return Matrix<T>(m_rows, m_cols, &m_mat);
+            return Matrix<T>(m_rows, m_cols, m_mat);
         }
         else
-            throw("Sizes of two matrices are mismatched");
+            throw std::runtime_error("Sizes of two matrices are mismatched");
     }
 
     /**
@@ -112,10 +118,10 @@ public:
         {
             for(size_t r = 0; r < m_mat.size(); ++r)
                 std::transform(m_mat[r].begin(), m_mat[r].end(), other.m_mat[r].begin(), m_mat[r].begin(), std::minus<T>());
-            return Matrix<T>(m_rows, m_cols, &m_mat);
+            return Matrix<T>(m_rows, m_cols, m_mat);
         }
         else
-            throw("Sizes of two matrices are mismatched");
+            throw std::runtime_error("Sizes of two matrices are mismatched");
     }
 
     /**
@@ -127,7 +133,7 @@ public:
     {
         for(size_t r = 0; r < m_mat.size(); ++r)
             std::transform(m_mat[r].begin(), m_mat[r].end(), m_mat[r].begin(), [scalar](T &e){ return e/scalar; });
-        return Matrix<T>(m_rows, m_cols, &m_mat);
+        return Matrix<T>(m_rows, m_cols, m_mat);
     }
 
     /**
@@ -139,7 +145,7 @@ public:
     {
         for(size_t r = 0; r < m_mat.size(); ++r)
             std::transform(m_mat[r].begin(), m_mat[r].end(), m_mat[r].begin(), [scalar](T &e){ return e*scalar; });
-        return Matrix<T>(m_rows, m_cols, &m_mat);
+        return Matrix<T>(m_rows, m_cols, m_mat);
     }
 
     /**
@@ -163,7 +169,7 @@ public:
             return true;
         }
         else
-            throw("Sizes of two matrices are mismatched");
+            throw std::runtime_error("Sizes of two matrices are mismatched!\n");
     }
 
     /**
@@ -180,6 +186,26 @@ public:
                 os << m(i, j) << " ";
             os << std::endl;
         }
+        return os;
+    }
+
+    /**
+     * @brief operator <<
+     * @param os
+     * @param v
+     * @return
+     */
+    friend std::ostream& operator<<(std::ostream& os, const Matrix<T>& m)
+    {
+        os << "[ ";
+        for(int r=0; r < m.m_rows; ++r)
+        {
+            os << "[ ";
+            for(int c=0; c < m.m_cols; ++c)
+                os << m(r, c) << ", ";
+            os << " ]" << std::endl;
+        }
+        os << "]";
         return os;
     }
 
@@ -201,7 +227,7 @@ public:
             return res;
         }
         else
-            throw("Matrix dimesnions misalignment was detected. m1.cols != m2.rows!");
+            throw std::runtime_error("Matrix dimesnions misalignment was detected. m1.cols != m2.rows!");
     }
 
     /**
@@ -212,9 +238,11 @@ public:
     Matrix<T> mul(const Vector<T>& vec)
     {
         std::vector<std::vector<T>> vec_d;
-        vec_d.reserve(1);
-        vec_d.push_back(vec.data());
-        Matrix<T> v_col{static_cast<int>(vec.size()), 1, &vec_d};
+        vec_d.resize(vec.size());
+        for(size_t i = 0; i < vec.size(); ++i)
+            vec_d[i].push_back(vec[i]);
+
+        Matrix<T> v_col{static_cast<int>(vec.size()), 1, vec_d};
         return mul(v_col);
     }
 
@@ -242,7 +270,7 @@ public:
             for(int c=0; c < m_rows; ++c)
                 tmp[r][c] = m_mat[c][r];
         }
-        return Matrix<T>{m_cols, m_rows, &tmp};
+        return Matrix<T>{m_cols, m_rows, tmp};
     }
 
     /**
@@ -261,7 +289,17 @@ public:
     Matrix<T> det()
     {
 
+
     }
+
+    T det_2x2()
+    {
+        if(m_mat.size() == 2 && std::all_of(m_mat.begin(), m_mat.end(), [](std::vector<T> e) { return e.size() == 2; }))
+            return m_mat[0][0]*m_mat[1][1] - m_mat[0][1]*m_mat[1][0];
+        else
+            throw std::runtime_error("[ERROR] Determinant of the matrix can be computed only for 2x2 matrix!");
+    }
+
 
     /**
      * @brief compute_minor
@@ -289,15 +327,57 @@ public:
      * @param col
      * @return
      */
-    Matrix<T> block(const int width, const int height, const int row, const int col)
+    Matrix<T> block(const int rows_num, const int cols_num, const int row, const int col)
     {
-        Matrix<T> tmp{width, height};
+        assert(row < m_rows && row >= 0);
+        assert(col < m_cols && col >= 0);
+
+        Matrix<T> block_mat{rows_num, cols_num};
 
         size_t i = 0;
         for(size_t r = row; r < m_rows; ++r)
-            std::transform(m_mat[r].begin()+col, m_mat[r].end(), tmp.m_mat[i].begin(), [](T e){ return e; });
+        {
+            std::transform(m_mat[r].begin()+col, m_mat[r].begin()+col+cols_num, block_mat.m_mat[i].begin(), [](T e){ return e; });
+            i++;
+        }
 
-        return tmp;
+        return block_mat;
+    }
+
+    /**
+     * @brief submatrix
+     * @param del_row
+     * @param del_col
+     * @return
+     */
+    Matrix<T> submatrix(const int del_row, const int del_col)
+    {
+        assert(del_row < m_rows && del_row >= 0);
+        assert(del_col < m_cols && del_col >= 0);
+
+        Matrix<T> submat{m_rows-1, m_cols-1};
+        size_t sub_r = 0;
+
+        for(size_t r=0; r < m_rows; ++r)
+        {
+            size_t sub_c = 0;
+            if(r == del_row)
+                continue;
+
+            for(size_t c=0; c < m_cols; ++c)
+            {
+                if(c == del_col)
+                    continue;
+                else
+                {
+                    submat(sub_r, sub_c) = m_mat[r][c];
+                    sub_c++;
+                }
+            }
+
+            sub_r++;
+        }
+        return submat;
     }
 
     /**
