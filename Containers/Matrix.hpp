@@ -286,27 +286,33 @@ public:
      * @brief det
      * @return
      */
-    Matrix<T> det()
+    T det()
     {
-
-
-    }
-
-    T det_2x2()
-    {
+        T determinant = 0;
         if(m_mat.size() == 2 && std::all_of(m_mat.begin(), m_mat.end(), [](std::vector<T> e) { return e.size() == 2; }))
-            return m_mat[0][0]*m_mat[1][1] - m_mat[0][1]*m_mat[1][0];
+            determinant =  m_mat[0][0]*m_mat[1][1] - m_mat[0][1]*m_mat[1][0];
         else
-            throw std::runtime_error("[ERROR] Determinant of the matrix can be computed only for 2x2 matrix!");
+        {
+            for(int c=0; c < m_cols; ++c)
+                determinant += compute_cofactor(0, c) * compute_minor(0, c) * m_mat[0][c];
+        }
+        return determinant;
     }
-
 
     /**
      * @brief compute_minor
      * @return
      */
-    Matrix<T> compute_minor()
+    T compute_minor(const int del_row, const int del_col)
     {
+        if(m_mat.size() > 2 && std::all_of(m_mat.begin(), m_mat.end(), [](std::vector<T> e) { return e.size() > 2; }))
+        {
+            Matrix<T> submat = submatrix(del_row, del_col);
+            T minor = submat.det();
+            return minor;
+        }
+        else
+            throw std::runtime_error("[ERROR] Matrix size should be > 2x2! ");
 
     }
 
@@ -314,9 +320,10 @@ public:
      * @brief compute_cofactor
      * @return
      */
-    Matrix<T> compute_cofactor()
+    T compute_cofactor(const int row, const int col)
     {
-
+        int i = row + col;
+        return std::pow(-1, i);
     }
 
     /**
