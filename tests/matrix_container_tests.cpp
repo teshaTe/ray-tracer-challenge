@@ -156,19 +156,32 @@ TEST(DeterminantMatrixTest, TestingMatrix_det)
 {
      std::vector<std::vector<float>> data1{{1, 5}, {-3, 2}};
      Matrix<float> m1{2, 2, data1};
-     float det = m1.det_2x2();
-     ASSERT_FLOAT_EQ(det, 17.0f);
+     float det1 = m1.det();
+     ASSERT_FLOAT_EQ(det1, 17.0f);
+
+     std::vector<std::vector<float>> data2{{1, 2, 6}, {-5, 8, -4}, {2, 6, 4}};
+     Matrix<float> m2{3, 3, data2};
+     float det2 = m2.det();
+     ASSERT_FLOAT_EQ(det2, -196);
+
+     std::vector<std::vector<float>> data3{{-2, -8, 3, 5}, {-3, 1, 7, 3}, {1, 2, -9, 6}, {-6, 7, 7, -9}};
+     Matrix<float> m3{4, 4, data3};
+     float det3 = m3.det();
+     ASSERT_FLOAT_EQ(det3, -4071);
+
 }
 
-//TEST(MinorMatrixTest, TestingMatrix_comp_minor)
-//{
+TEST(MinorMatrixTest, TestingMatrix_comp_minor)
+{
+    std::vector<std::vector<float>> data1{{3, 5, 0}, {2, -1, -7}, {6, -1, 5}};
+    Matrix<float> m1{3, 3, data1};
+    float minor1 = m1.compute_minor(1, 0);
+    ASSERT_FLOAT_EQ(minor1, 25);
 
-//}
-
-//TEST(CofactorMatrixTest, TestingMatrix_comp_cofactor)
-//{
-
-//}
+    float cofactor1 = m1.compute_cofactor(1, 0);
+    float res = cofactor1 * minor1;
+    ASSERT_FLOAT_EQ(res, -25);
+}
 
 TEST(BlockMatrixTest, TestingMatrix_block)
 {
