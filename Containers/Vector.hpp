@@ -1,103 +1,285 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
-#include <array>
+#include <vector>
 #include <cmath>
+#include <algorithm>
+#include <numeric>
 #include <iostream>
+#include <cassert>
 
 
 namespace ray_tracer {
 
+
+/**
+ * @brief The Vector class
+ */
+
 template <class T>
-class Vector3
+class Vector
 {
 private:
-    std::array<T, 3> m_vec{0, 0, 0};
-    double _magnitude() const {  }
+    std::vector<T> m_vec;
+    T m_zero = 0;
 
 public:
-    Vector3(): m_vec({0, 0, 0}) {}
-    Vector3(const T x, const T y, const T z) { m_vec.swap(std::array<T, 3>{x, y, z}); }
-    Vector3(const Vector3<T>& other) { m_vec[0] = other.x(); m_vec[1] = other.y(); m_vec[2] = other.z(); }
+    /**
+     * @brief Vector
+     * @param size
+     */
+    Vector(size_t size){ set_zeros(size); };
 
+    /**
+     * @brief Vector
+     * @param x
+     * @param y
+     */
+    Vector(const T x, const T y)
+    {
+        m_vec.resize(2);
+        m_vec[0] = x;
+        m_vec[1] = y;
+    }
+
+    /**
+     * @brief Vector
+     * @param x
+     * @param y
+     * @param z
+     */
+    Vector(const T x, const T y, const T z)
+    {
+        m_vec.resize(3);
+        m_vec[0] = x;
+        m_vec[1] = y;
+        m_vec[2] = z;
+    }
+
+    /**
+     * @brief Vector
+     * @param x
+     * @param y
+     * @param z
+     * @param w
+     */
+    Vector(const T x, const T y, const T z, const T w)
+    {
+        m_vec.resize(4);
+        m_vec[0] = x;
+        m_vec[1] = y;
+        m_vec[2] = z;
+        m_vec[3] = w;
+    }
+
+    /**
+     * @brief Vector
+     * @param v
+     */
+    Vector(const std::vector<T> &v)
+    {
+        if(v.size() > 1 && v.size() < 5)
+            m_vec = v;
+        else
+            throw std::runtime_error( "Specified vector size is unsupported by this class. Supported sizes are: 2, 3, 4.");
+    }
+
+    /**
+     * @brief Vector
+     * @param other
+     */
+    Vector(const Vector<T> &other) { m_vec = other.m_vec; }
+
+    /**
+     * @brief operator []
+     * @param i
+     * @return
+     */
     T &operator[](int i) { return m_vec[i]; }
-    Vector3<T> operator+(const Vector3<T>& other) const { return Vector3<T>(this->m_vec[0]+other.x(), this->m_vec[1]+other.y(), this->m_vec[2]+other.z()); }
-    Vector3<T> operator-(const Vector3<T>& other) const { return Vector3<T>(this->m_vec[0]-other.x(), this->m_vec[1]-other.y(), this->m_vec[2]-other.z()); }
-    Vector3<T> operator*(const T s) const { return Vector3<T>(this->m_vec[0]*s, this->m_vec[1]*s, this->m_vec[2]*s); }
-    Vector3<T> operator/(const T s) const { return Vector3<T>(this->m_vec[0]/s, this->m_vec[1]/s, this->m_vec[2]/s); }
+    const T& operator[] (int i) const { return m_vec[i]; }
 
-    bool operator==(const Vector3<T>& v) const
+    /**
+     * @brief operator +
+     * @param other
+     * @return
+     */
+    Vector<T> operator+(const Vector<T> &other) const
+    {
+        assert(m_vec.size() == other.m_vec.size());
+        std::vector<T> res;
+        res.resize(m_vec.size());
+        std::transform(this->m_vec.begin(), this->m_vec.end(), other.m_vec.begin(), res.begin(), std::plus<T>());
+        return Vector<T>{res};
+    }
+
+    /**
+     * @brief operator -
+     * @param other
+     * @return
+     */
+    Vector<T> operator-(const Vector<T> &other) const
+    {
+        assert(m_vec.size() == other.m_vec.size());
+        std::vector<T> res;
+        res.resize(m_vec.size());
+        std::transform(m_vec.begin(), m_vec.end(), other.m_vec.begin(), res.begin(), std::minus<T>());
+        return Vector<T>{res};
+    }
+
+    /**
+     * @brief operator *
+     * @param s
+     * @return
+     */
+    Vector<T> operator*(const T s) const
+    {
+        std::vector<T> tmp;
+        tmp.resize(m_vec.size());
+        std::transform(m_vec.begin(), m_vec.end(), tmp.begin(), [s](T e) { return e*s; });
+        return Vector<T>{tmp};
+    }
+
+    /**
+     * @brief operator /
+     * @param s
+     * @return
+     */
+    Vector<T> operator/(const T s) const
+    {
+        std::vector<T> tmp;
+        tmp.resize(m_vec.size());
+        std::transform(m_vec.begin(), m_vec.end(), tmp.begin(), [s](T e) { return e/s; });
+        return Vector<T>{tmp};
+    }
+
+    /**
+     * @brief operator ==
+     * @param other
+     * @return
+     */
+    bool operator==(const Vector<T> &other) const
     {
         const double eps{0.00001};
-        std::array<T, 3> diff{m_vec[0] - v.m_vec[0], m_vec[1] - v.m_vec[1], m_vec[2] - v.m_vec[2]};
-        if((std::abs(diff[0]) < eps) && (std::abs(diff[1]) < eps) && (std::abs(diff[2]) < eps))
+        std::vector<T> diff;
+        diff.resize(m_vec.size());
+        std::transform(m_vec.begin(), m_vec.end(), other.m_vec.begin(), diff.begin(), std::minus<T>());
+        bool ok = std::all_of(diff.begin(), diff.end(), [eps](T e) { return e < eps; });
+        if(ok)
             return true;
         else
             return false;
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const Vector3<T>& v)
+    /**
+     * @brief operator <<
+     * @param os
+     * @param v
+     * @return
+     */
+    friend std::ostream& operator<<(std::ostream& os, const Vector<T>& v)
     {
-        os << "[" << v.x() << ", " << v.y() << ", " << v.z() << "]";
+        os << "[ ";
+        for(auto e : v.m_vec)
+            os << e << ", ";
+        os << "]";
         return os;
     }
 
-    int size() const { return m_vec.size(); }
-    auto dot(const Vector3<T>& other) const { return m_vec[0] * other.x() + m_vec[1] * other.y() + m_vec[2] * other.z(); }
-    auto magnitude() const { return std::sqrt(m_vec[0]*m_vec[0] + m_vec[1]*m_vec[1] + m_vec[2]*m_vec[2]); }
+    /**
+     * @brief size
+     * @return
+     */
+    size_t size() const { return m_vec.size(); }
 
-    Vector3<T> cross(const Vector3<T>& other) const { return Vector3<T>(m_vec[1] * other.z() - m_vec[2] * other.y(),
-                                                                        m_vec[2] * other.x() - m_vec[0] * other.z(),
-                                                                        m_vec[0] * other.y() - m_vec[1] * other.x()); }
-
-    Vector3<T> normalize() const { return Vector3<T>(m_vec[0] / static_cast<T>(magnitude()),
-                                                     m_vec[1] / static_cast<T>(magnitude()),
-                                                     m_vec[2] / static_cast<T>(magnitude())); }
-
-    Vector3<T> negate() const { return Vector3<T>(-m_vec[0], -m_vec[1], -m_vec[2]); }
-
-    T x() const { return m_vec[0]; }
-    T y() const { return m_vec[1]; }
-    T z() const { return m_vec[2]; }
-
-    ~Vector3() = default;
-};
-
-
-template<class T>
-class Vector4
-{
-private:
-    std::array<T, 4> m_vec={0, 0, 0, 0};
-
-public:
-    Vector4() = default;
-    Vector4(const T x, const T y, const T z, const T w) { m_vec = {x, y, z, w}; }
-    Vector4(const Vector4<T>& v) { m_vec[0] = v.x(); m_vec[1] = v.y(); m_vec[2] = v.z(); m_vec[3] = v.w(); }
-
-    T operator[](int i) const { return m_vec[i]; }
-    Vector4<T> operator+(const Vector4<T>& v) const { return Vector4<T>(this->m_vec[0]+v.x(), this->m_vec[1]+v.y(), this->m_vec[2]+v.z(), this->m_vec[3]+v.w()); }
-    Vector4<T> operator-(const Vector4<T>& v) const { return Vector4<T>(this->m_vec[0]-v.x(), this->m_vec[1]-v.y(), this->m_vec[2]-v.z(), this->m_vec[3]-v.w()); }
-    Vector4<T> operator*(const T s) const { return Vector4<T>(this->m_vec[0]*s, this->m_vec[1]*s, this->m_vec[2]*s, this->m_vec[3]*s); }
-    Vector4<T> operator/(const T s) const { return Vector4<T>(this->m_vec[0]/s, this->m_vec[1]/s, this->m_vec[2]/s, this->m_vec[3]/s); }
-
-    bool operator==(const Vector4<T>& v) const
+    /**
+     * @brief set_zeros
+     * @param size
+     */
+    void set_zeros(size_t size)
     {
-        const double eps{0.00001};
-        std::array<T, 4> diff{m_vec[0] - v.m_vec[0], m_vec[1] - v.m_vec[1], m_vec[2] - v.m_vec[2], m_vec[3] - v.m_vec[3]};
-        if((std::abs(diff[0]) < eps) && (std::abs(diff[1]) < eps) && (std::abs(diff[2]) < eps) && (std::abs(diff[3]) < eps))
-            return true;
+        if(size > 0 && size < 5)
+        {
+            m_vec.resize(size);
+            std::fill(m_vec.begin(), m_vec.end(), m_zero);
+        }
         else
-            return false;
+            throw std::runtime_error("[ERROR] Cannot create vector of size 5 or more!");
     }
 
-    int size() const { return m_vec.size(); }
-    T x() const { return m_vec[0]; }
-    T y() const { return m_vec[1]; }
-    T z() const { return m_vec[2]; }
-    T w() const { return m_vec[3]; }
+    /**
+     * @brief dot
+     * @param other
+     */
+    T dot(const Vector<T> other) const
+    {
+        std::vector<T> tmp;
+        tmp.resize(m_vec.size());
+        std::transform(m_vec.begin(), m_vec.end(), other.m_vec.begin(), tmp.begin(), std::multiplies<T>());
+        T res = std::accumulate(tmp.begin(), tmp.end(), m_zero);
+        return res;
+    }
 
-    ~Vector4() = default;
+    /**
+     * @brief magnitude
+     */
+    T magnitude() const
+    {
+        std::vector<T> tmp;
+        tmp.resize(m_vec.size());
+        std::transform(m_vec.begin(), m_vec.end(), m_vec.begin(), tmp.begin(), std::multiplies<T>());
+        T res = std::accumulate(tmp.begin(), tmp.end(), m_zero);
+        return std::sqrt(res);
+    }
+
+    /**
+     * @brief cross
+     * @param other
+     * @return
+     */
+    Vector<T> cross(const Vector<T>& other) const
+    {
+        assert(m_vec.size() == other.size());
+        assert(m_vec.size() == 3);
+        assert(other.m_vec.size() == 3);
+
+        std::vector<T> tmp{m_vec[1] * other.m_vec[2] - m_vec[2] * other.m_vec[1],
+                           m_vec[2] * other.m_vec[0] - m_vec[0] * other.m_vec[2],
+                           m_vec[0] * other.m_vec[1] - m_vec[1] * other.m_vec[0]};
+        return Vector<T>{tmp};
+    }
+
+    /**
+     * @brief normalize
+     * @return
+     */
+    Vector<T> normalize() const
+    {
+        T magn = magnitude();
+        std::vector<T> tmp;
+        tmp.resize(m_vec.size());
+        std::transform(m_vec.begin(), m_vec.end(), tmp.begin(), [magn](T e) { return e/static_cast<T>(magn); });
+        return Vector<T>{tmp};
+    }
+
+    /**
+     * @brief negate
+     * @return
+     */
+    Vector<T> negate() const
+    {
+        std::vector<T> tmp;
+        tmp.resize(m_vec.size());
+        std::transform(m_vec.begin(), m_vec.end(), tmp.begin(), [](T e) { return -e; });
+        return Vector<T>{tmp};
+    }
+
+    /**
+     * @brief data
+     * @return
+     */
+    std::vector<T> data() const { return m_vec; }
+
+    ~Vector() = default;
 };
 
 } // namespace ray_tracer
