@@ -279,6 +279,20 @@ public:
      */
     Matrix<T> inv()
     {
+        T determinant = det();
+        if(determinant != 0)
+        {
+            Matrix<T> inv_mat(m_rows, m_cols);
+            for(int r=0; r < m_rows; ++r)
+                for(int c=0; c < m_cols; ++c)
+                {
+                    T cof = compute_cofactor(r, c) * compute_minor(r, c);
+                    inv_mat(c, r) = cof / determinant;
+                }
+            return inv_mat;
+        }
+        else
+            throw std::runtime_error("Cannot compute invert matrix for the matrix with det=0.");
 
     }
 
