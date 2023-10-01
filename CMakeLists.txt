@@ -18,7 +18,7 @@ set(CONTAINERS Containers/Vector.hpp
                Containers/Color.hpp)
 
 set(RAYTRACER_SOURCE RayTracer/Canvas.hpp
-                     RayTracer/MatrixUtils.h)
+                     RayTracer/MatrixUtils.hpp)
 
 set(RAYTRACER_HEADERS )
 
