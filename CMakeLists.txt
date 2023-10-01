@@ -6,7 +6,7 @@ project(RayTracer-project LANGUAGES CXX)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(PROJECT_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 ########################### AVAILABLE PROJECT OPTIONS #############################
 
@@ -17,7 +17,10 @@ set(CONTAINERS Containers/Vector.hpp
                Containers/Matrix.hpp
                Containers/Color.hpp)
 
-set(RAYTRACER_SOURCE RayTracer/Canvas.hpp)
+set(RAYTRACER_SOURCE RayTracer/Canvas.hpp
+                     RayTracer/MatrixUtils.h)
+
+set(RAYTRACER_HEADERS )
 
 enable_testing()
 add_subdirectory(tests)
@@ -25,4 +28,4 @@ add_subdirectory(tests)
 ############################ CREATING EXECUTABLES TO RUN ##########################
 
 add_executable(ProjectileSample "${PROJECT_ROOT_DIR}/Samples/projectile_gen_sample.cpp" ${CONTAINERS} ${RAYTRACER_SOURCE})
-add_executable(RayTracer ray_tracer.cpp ${CONTAINERS} ${RAYTRACER_SOURCE})
+add_executable(RayTracer ray_tracer.cpp ${CONTAINERS} ${RAYTRACER_SOURCE} ${RAYTRACER_HEADERS})
