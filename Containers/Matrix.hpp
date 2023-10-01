@@ -227,7 +227,7 @@ public:
             return res;
         }
         else
-            throw std::runtime_error("Matrix dimesnions misalignment was detected. m1.cols != m2.rows!");
+            throw std::runtime_error("Matrix dimesnions misalignment was detected: m1.cols != m2.rows.");
     }
 
     /**
@@ -238,11 +238,21 @@ public:
     Matrix<T> mul(const Vector<T>& vec)
     {
         std::vector<std::vector<T>> vec_d;
-        vec_d.resize(vec.size());
+        if(m_rows - vec.size() == 1)
+        {
+            vec_d.resize(vec.size()+1);
+            vec_d[vec.size()].push_back(1);
+        }
+        else if(m_rows == vec.size())
+            vec_d.resize(vec.size());
+        else
+            throw std::runtime_error("Matrix dimesnions misalignment was detected: mat.m_rows != vec.size().");
+
         for(size_t i = 0; i < vec.size(); ++i)
             vec_d[i].push_back(vec[i]);
 
-        Matrix<T> v_col{static_cast<int>(vec.size()), 1, vec_d};
+
+        Matrix<T> v_col{static_cast<int>(vec_d.size()), 1, vec_d};
         return mul(v_col);
     }
 
@@ -406,6 +416,42 @@ public:
      * @return
      */
     std::vector<std::vector<T>> data() const { return m_mat; }
+
+    /**
+     * @brief to_vec_1x2
+     * @return
+     */
+    Vector<T> to_vec_1x2()
+    {
+        if(m_rows > 1)
+            return Vector<T>{m_mat[0][0], m_mat[1][0]};
+        else
+            return Vector<T>{m_mat[0][0], m_mat[0][1]};
+    }
+
+    /**
+     * @brief to_vec_1x3
+     * @return
+     */
+    Vector<T> to_vec_1x3()
+    {
+        if(m_rows > 1)
+            return Vector<T>{m_mat[0][0], m_mat[1][0], m_mat[2][0]};
+        else
+            return Vector<T>{m_mat[0][0], m_mat[0][1], m_mat[0][2]};
+    }
+
+    /**
+     * @brief to_vec_1x4
+     * @return
+     */
+    Vector<T> to_vec_1x4()
+    {
+        if(m_rows > 1)
+            return Vector<T>{m_mat[0][0], m_mat[1][0], m_mat[2][0], m_mat[3][0]};
+        else
+            return Vector<T>{m_mat[0][0], m_mat[0][1], m_mat[0][2], m_mat[0][3]};
+    }
 
     ~Matrix() = default;
 };
