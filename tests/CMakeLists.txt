@@ -33,7 +33,7 @@ target_include_directories(canvas_test PUBLIC "${PROJECT_ROOT_DIR}/RayTracer" "$
 target_link_libraries(canvas_test PRIVATE GTest::GTest)
 add_test(canvas_gtest canvas_test)
 
-add_executable(matrix_utils_test matrix_utils_tests.cpp)
+add_executable(matrix_utils_test matrix_utilities_tests.cpp)
 target_include_directories(matrix_utils_test PUBLIC "${PROJECT_ROOT_DIR}/RayTracer" "${PROJECT_ROOT_DIR}")
 target_link_libraries(matrix_utils_test PRIVATE GTest::GTest)
 add_test(matrix_utils_gtest matrix_utils_test)
