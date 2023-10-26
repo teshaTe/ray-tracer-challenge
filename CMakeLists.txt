@@ -17,17 +17,23 @@ set(CONTAINERS Containers/Vector.hpp
                Containers/Matrix.hpp
                Containers/Color.hpp)
 
-set(RAYTRACER_SOURCE RayTracer/Canvas.hpp
-                     RayTracer/MatrixUtils.hpp)
+set(PRIMITIVES Primitives/Primitive.hpp
+               Primitives/Sphere.hpp)
 
-set(RAYTRACER_HEADERS )
+set(RAYTRACER_HEADERS RayTracer/Canvas.hpp
+                      RayTracer/MatrixUtils.hpp
+                      RayTracer/RayTracer.h
+                      RayTracer/Ray.hpp)
+
+set(RAYTRACER_SOURCE  RayTracer/RayTracer.cpp)
 
 enable_testing()
 add_subdirectory(tests)
 
 ############################ CREATING EXECUTABLES TO RUN ##########################
 
-add_executable(ProjectileSample "${PROJECT_ROOT_DIR}/Samples/projectile_gen_sample.cpp" ${CONTAINERS} ${RAYTRACER_SOURCE})
-add_executable(ClockSample "${PROJECT_ROOT_DIR}/Samples/clock_drawing_sample.cpp" ${CONTAINERS} ${RAYTRACER_SOURCE})
+# add_executable(ProjectileSample "${PROJECT_ROOT_DIR}/Samples/projectile_gen_sample.cpp" ${CONTAINERS} ${RAYTRACER_SOURCE})
+# add_executable(ClockSample "${PROJECT_ROOT_DIR}/Samples/clock_drawing_sample.cpp" ${CONTAINERS} ${RAYTRACER_SOURCE})
 
-add_executable(RayTracer ray_tracer.cpp ${CONTAINERS} ${RAYTRACER_SOURCE} ${RAYTRACER_HEADERS})
+add_executable(RayTracer ray_tracer.cpp ${CONTAINERS} ${RAYTRACER_SOURCE} ${RAYTRACER_HEADERS} ${PRIMITIVES}
+    Primitives/Sphere.hpp)
