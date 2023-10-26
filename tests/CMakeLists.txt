@@ -37,3 +37,14 @@ add_executable(matrix_utils_test matrix_utilities_tests.cpp)
 target_include_directories(matrix_utils_test PUBLIC "${PROJECT_ROOT_DIR}/RayTracer" "${PROJECT_ROOT_DIR}")
 target_link_libraries(matrix_utils_test PRIVATE GTest::GTest)
 add_test(matrix_utils_gtest matrix_utils_test)
+
+add_executable(ray_creation_test ray_creation_test.cpp)
+target_include_directories(ray_creation_test PUBLIC "${PROJECT_ROOT_DIR}/RayTracer" "${PROJECT_ROOT_DIR}")
+target_link_libraries(ray_creation_test PRIVATE GTest::GTest)
+add_test(ray_creation_gtest ray_creation_test)
+
+
+add_executable(sphere_prim_test sphere_prim_tests.cpp)
+target_include_directories(sphere_prim_test PUBLIC "${PROJECT_ROOT_DIR}/RayTracer" "${PROJECT_ROOT_DIR}")
+target_link_libraries(sphere_prim_test PRIVATE GTest::GTest)
+add_test(sphere_prim_gtest sphere_prim_test)
