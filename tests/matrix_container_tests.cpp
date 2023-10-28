@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "Matrix.hpp"
+#include "Containers/Matrix.hpp"
 
 using namespace ray_tracer;
 

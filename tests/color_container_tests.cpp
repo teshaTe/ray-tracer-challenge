@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "Color.hpp"
+#include "Containers/Color.hpp"
 
 using namespace ray_tracer;
 

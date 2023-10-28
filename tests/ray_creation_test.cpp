@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "RayTracer/Ray.hpp"
+#include "Core/Ray.hpp"
 
 using namespace ray_tracer;
 

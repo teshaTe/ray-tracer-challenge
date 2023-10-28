@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "Canvas.hpp"
+#include "Core/Canvas.hpp"
 #include <iostream>
 
 using namespace ray_tracer;

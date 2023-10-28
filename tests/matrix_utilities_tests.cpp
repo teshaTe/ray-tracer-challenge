@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "Containers/Vector.hpp"
 #include "Containers/Matrix.hpp"
-#include "RayTracer/MatrixUtils.hpp"
+#include "Core/MatrixUtils.hpp"
 
 
 using namespace ray_tracer;

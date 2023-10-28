@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "Vector.hpp"
+#include "Containers/Vector.hpp"
 
 using namespace ray_tracer;
 

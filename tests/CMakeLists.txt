@@ -30,7 +30,7 @@ add_test(color_gtest color_test)
 
 add_executable(canvas_test canvas_tests.cpp)
 target_include_directories(canvas_test PUBLIC "${PROJECT_ROOT_DIR}/RayTracer" "${PROJECT_ROOT_DIR}")
-target_link_libraries(canvas_test PRIVATE GTest::GTest)
+target_link_libraries(canvas_test PRIVATE GTest::GTest core_lib)
 add_test(canvas_gtest canvas_test)
 
 add_executable(matrix_utils_test matrix_utilities_tests.cpp)
@@ -43,8 +43,12 @@ target_include_directories(ray_creation_test PUBLIC "${PROJECT_ROOT_DIR}/RayTrac
 target_link_libraries(ray_creation_test PRIVATE GTest::GTest)
 add_test(ray_creation_gtest ray_creation_test)
 
-
 add_executable(sphere_prim_test sphere_prim_tests.cpp)
 target_include_directories(sphere_prim_test PUBLIC "${PROJECT_ROOT_DIR}/RayTracer" "${PROJECT_ROOT_DIR}")
-target_link_libraries(sphere_prim_test PRIVATE GTest::GTest)
+target_link_libraries(sphere_prim_test PRIVATE GTest::GTest shapes_lib)
 add_test(sphere_prim_gtest sphere_prim_test)
+
+add_executable(ray_tracer_test ray_tracer_tests.cpp)
+target_include_directories(ray_tracer_test PUBLIC "${PROJECT_ROOT_DIR}/RayTracer" "${PROJECT_ROOT_DIR}")
+target_link_libraries(ray_tracer_test PRIVATE GTest::GTest)
+add_test(ray_tracer_gtest ray_tracer_test)
