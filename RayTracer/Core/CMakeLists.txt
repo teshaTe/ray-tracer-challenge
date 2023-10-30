@@ -7,9 +7,11 @@ set(RAYTRACER_HEADERS Canvas.hpp
                       MatrixUtils.hpp
                       RayTracer.h
                       Ray.hpp
-                      DataTypes.hpp)
+                      DataTypes.hpp
+                      Shape.h)
 
-set(RAYTRACER_SRC  RayTracer.cpp)
+set(RAYTRACER_SRC  RayTracer.cpp
+                   Shape.cpp)
 
 ############################ CREATING EXECUTABLES TO RUN ##########################
 
