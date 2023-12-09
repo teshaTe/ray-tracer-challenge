@@ -3,7 +3,24 @@
 
 namespace ray_tracer::shapes {
 
-Sphere::Sphere(const Vector<float> &origin, const float radius, const int id): m_radius(radius), m_origin(origin), m_obj_name("sphere"), m_id(id){}
+Sphere::Sphere(const Vector<float> &origin, const float radius, const int id): m_radius(radius),
+                                                                               m_origin(origin),
+                                                                               m_obj_name("sphere"),
+                                                                               m_id(id),
+                                                                               m_transform_mat{Matrix<float>{4, 4}}
+{
+    m_transform_mat.I();
+}
+
+void Sphere::transform(const Matrix<float> &transform)
+{
+
+}
+
+void Sphere::transform(const Vector<float> &tr_vec, const Matrix<float> &rot_mat)
+{
+
+}
 
 std::vector<types::intersection> Sphere::intersect(const Ray &ray) const
 {
