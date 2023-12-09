@@ -13,7 +13,11 @@ set(RAYTRACER_HEADERS Canvas.hpp
 set(RAYTRACER_SRC  RayTracer.cpp
                    Shape.cpp)
 
+set(CONTAINERS_SRC ${PROJECT_ROOT_DIR}/RayTracer/Containers/Matrix.hpp
+                   ${PROJECT_ROOT_DIR}/RayTracer/Containers/Vector.hpp
+                   ${PROJECT_ROOT_DIR}/RayTracer/Containers/Color.hpp)
+
 ############################ CREATING EXECUTABLES TO RUN ##########################
 
-add_library(core_lib ${RAYTRACER_SRC} ${RAYTRACER_HEADERS})
+add_library(core_lib ${RAYTRACER_SRC} ${RAYTRACER_HEADERS} ${CONTAINERS_SRC})
 target_link_libraries(core_lib shapes_lib)
