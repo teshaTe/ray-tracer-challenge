@@ -34,9 +34,10 @@ public:
     // functions for changing/getting sphere transformation matrix/data
     void transform(const Matrix<float> &transform) override;
     void transform(const Vector<float> &tr_vec, const Matrix<float> &rot_mat) override;
+
     Matrix<float> get_transform() override { return m_transform_mat; }
     Matrix<float> get_rotation_matrix() override { return m_transform_mat.block(3, 3, 0, 0); }
-    Vector<float> get_translation() override { return m_transform_mat.block(3, 1, 3, 0).to_vec_1x3(); }
+    Vector<float> get_translation() override { return m_transform_mat.block(3, 1, 0, 3).to_vec_1x3(); }
 
     // scale the object up or down
     virtual void scale(const Vector<float> &scale_vec) override;
