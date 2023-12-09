@@ -35,6 +35,36 @@ TEST(ComputingPositionTest, TestingRayPositionComputation)
     ASSERT_EQ(p4, p4_ref);
 }
 
+TEST(TranslationTest, TestingRayTranslation)
+{
+    Vector<float> origin{1, 2, 3};
+    Vector<float> direction{0, 1, 0};
+    Ray ray(origin, direction);
+
+    Vector<float> tr_vec{3, 4, 5};
+    Ray tr_ray = ray.translate(tr_vec);
+
+    Vector<float> orig_ref{4, 6, 8};
+    ASSERT_EQ(tr_ray.get_origin(), orig_ref);
+    ASSERT_EQ(tr_ray.get_direction(), ray.get_direction());
+}
+
+TEST(ScalingTest, TestingRayScaling)
+{
+    Vector<float> origin{1, 2, 3};
+    Vector<float> direction{0, 1, 0};
+    Ray ray(origin, direction);
+
+    Vector<float> scaling_vec{2, 3, 4};
+    Ray tr_ray = ray.scale(scaling_vec);
+
+    Vector<float> orig_ref{2, 6, 12};
+    Vector<float> dir_ref{0, 3, 0};
+
+    ASSERT_EQ(tr_ray.get_origin(), orig_ref);
+    ASSERT_EQ(tr_ray.get_direction(), dir_ref);
+}
+
 
 int main(int argc, char *argv[])
 {
