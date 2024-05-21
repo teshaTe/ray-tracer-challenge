@@ -16,6 +16,11 @@ private:
     Vector<float> m_direction;
 
 public:
+    /**
+    * @brief Ray
+    * @param origin
+    * @param direction
+     */
     Ray(const Vector<float> &origin, const Vector<float> &direction): m_origin(origin), m_direction(direction) {}
 
     /**
@@ -29,12 +34,22 @@ public:
         return ray.m_origin + ray.m_direction * t;
     }
 
+    /**
+     * @brief translate
+     * @param translation
+     * @return
+     */
     Ray translate(const Vector<float> &translation)
     {
         Vector<float> new_origin = m_origin + translation;
         return Ray(new_origin, m_direction);
     }
 
+    /**
+     * @brief scale
+     * @param scaling_vec
+     * @return
+     */
     Ray scale(const Vector<float> &scaling_vec)
     {
         Vector<float> new_origin = Vector<float>{m_origin[0]*scaling_vec[0], m_origin[1]*scaling_vec[1], m_origin[2]*scaling_vec[2]};
@@ -42,8 +57,18 @@ public:
         return Ray(new_origin, new_direction);
     }
 
+    /**
+     * @brief get_origin
+     * @return
+     */
     const Vector<float> get_origin() const { return m_origin; }
+
+    /**
+     * @brief get_direction
+     * @return
+     */
     const Vector<float> get_direction() const { return m_direction; }
+
 };
 
 } //namespace ray_tracer

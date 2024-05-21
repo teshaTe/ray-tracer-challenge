@@ -39,6 +39,9 @@ public:
     Matrix<float> get_rotation_matrix() override { return m_transform_mat.block(3, 3, 0, 0); }
     Vector<float> get_translation() override { return m_transform_mat.block(3, 1, 0, 3).to_vec_1x3(); }
 
+    // virtual std::vector<Vector<float>> get_normals() override;
+    virtual Vector<float> get_normal(const Vector<float> &point) override;
+
     // scale the object up or down
     virtual void scale(const Vector<float> &scale_vec) override;
 

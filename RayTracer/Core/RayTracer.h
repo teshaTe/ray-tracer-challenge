@@ -17,6 +17,9 @@ private:
 public:
     RayTracer() = default;
 
+    Vector<float> get_reflection_vector(const Vector<float> &incident, const Vector<float> &normal);
+
+
     ~RayTracer() = default;
 };
 

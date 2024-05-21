@@ -21,5 +21,7 @@ add_subdirectory(RayTracer)
 
 ############################ CREATING EXECUTABLES TO RUN ##########################
 
-# add_executable(ProjectileSample "${PROJECT_ROOT_DIR}/Samples/projectile_gen_sample.cpp" ${CONTAINERS} ${RAYTRACER_SOURCE})
-# add_executable(ClockSample "${PROJECT_ROOT_DIR}/Samples/clock_drawing_sample.cpp" ${CONTAINERS} ${RAYTRACER_SOURCE})
+add_executable(ProjectileSample "${PROJECT_ROOT_DIR}/Samples/projectile_gen_sample.cpp" ${CONTAINERS} ${RAYTRACER_SOURCE})
+add_executable(ClockSample "${PROJECT_ROOT_DIR}/Samples/clock_drawing_sample.cpp" ${CONTAINERS} ${RAYTRACER_SOURCE})
+add_executable(SphereSample "${PROJECT_ROOT_DIR}/Samples/sphere_rendering_sample.cpp" ${CONTAINERS} ${RAYTRACER_SOURCE})
+target_link_libraries(SphereSample core_lib)

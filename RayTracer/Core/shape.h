@@ -23,6 +23,8 @@ public:
     virtual Matrix<float> get_transform() = 0;
     virtual Matrix<float> get_rotation_matrix() = 0;
     virtual Vector<float> get_translation() = 0;
+    // virtual std::vector<Vector<float>> get_normals() = 0;
+    virtual Vector<float> get_normal(const Vector<float> &point) = 0;
 
     virtual void scale(const Vector<float> &scale_vec) = 0;
 

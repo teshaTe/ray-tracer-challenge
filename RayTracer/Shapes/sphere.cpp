@@ -1,5 +1,5 @@
 #include "sphere.h"
-
+#include "Core/MatrixUtils.hpp"
 
 namespace ray_tracer::shapes {
 
@@ -14,12 +14,38 @@ Sphere::Sphere(const Vector<float> &origin, const float radius, const int id): m
 
 void Sphere::transform(const Matrix<float> &transform)
 {
-
+    m_transform_mat = transform;
 }
 
 void Sphere::transform(const Vector<float> &tr_vec, const Matrix<float> &rot_mat)
 {
+    for (int i = 0; i < 3; i++)
+    {
+        m_transform_mat(i, 3) = tr_vec[i];
+        for (int j = 0; j < 3; j++)
+            m_transform_mat(i, j) = rot_mat(i, j);
+    }
+}
 
+Vector<float> Sphere::get_normal(const Vector<float> &point)
+{
+    Vector<float> obj_point = m_transform_mat.inv().mul(point).to_vec_1x3();
+    Vector<float> normal = obj_point - m_origin;
+    Vector<float> world_normal = m_transform_mat.inv().tr().mul(normal).to_vec_1x3();
+    return world_normal.normalize();
+}
+
+Vector<float> Sphere::get_reflection_vector(const Vector<float> &incident, const Vector<float> &normal)
+{
+    return incident - normal* 2.0 * incident.dot(normal);
+}
+
+
+void Sphere::scale(const Vector<float> &scale_vec)
+{
+    MatrixUtlities mat_utils{};
+    Matrix<float> S = mat_utils.scaling_mat(scale_vec[0], scale_vec[1], scale_vec[2]);
+    m_transform_mat = m_transform_mat.mul(S);
 }
 
 std::vector<types::intersection> Sphere::intersect(const Ray &ray) const

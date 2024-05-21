@@ -8,10 +8,10 @@ set(RAYTRACER_HEADERS Canvas.hpp
                       RayTracer.h
                       Ray.hpp
                       DataTypes.hpp
-                      Shape.h)
+                      shape.h)
 
 set(RAYTRACER_SRC  RayTracer.cpp
-                   Shape.cpp)
+                   shape.cpp)
 
 set(CONTAINERS_SRC ${PROJECT_ROOT_DIR}/RayTracer/Containers/Matrix.hpp
                    ${PROJECT_ROOT_DIR}/RayTracer/Containers/Vector.hpp

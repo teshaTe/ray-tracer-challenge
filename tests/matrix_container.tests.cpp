@@ -205,6 +205,11 @@ TEST(BlockMatrixTest, TestingMatrix_block)
      std::vector<std::vector<float>> data_ref1{{-3, 2}, {0, 6}};
      Matrix<float> m_ref1{2, 2, data_ref1};
      ASSERT_EQ(sub_m1, m_ref1);
+
+     Matrix<float> sub_m2 = m1.block(2, 1, 0, 2);
+     std::vector<std::vector<float>> data_ref2{{0}, {7}};
+     Matrix<float> m_ref2{2, 1, data_ref2};
+     ASSERT_EQ(sub_m2, m_ref2);
 }
 
 TEST(SubMatrixTest, TestingMatrix_submatrix)

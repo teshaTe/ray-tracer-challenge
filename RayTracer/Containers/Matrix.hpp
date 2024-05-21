@@ -210,6 +210,12 @@ public:
     }
 
     /**
+     * @brief size
+     * @return
+     */
+    std::pair<int, int> size() {return std::pair<int, int>{m_rows, m_cols};}
+
+    /**
      * @brief mul
      * @param mat
      * @return
@@ -365,18 +371,24 @@ public:
 
         Matrix<T> block_mat{rows_num, cols_num};
 
+        int row_end = 0;
+        if(row > 0)
+            row_end = m_rows;
+        else
+            row_end = rows_num;
+
         size_t i = 0;
-        for(size_t r = row; r < m_rows; ++r)
+        for(size_t r = row; r < row_end; ++r)
         {
-            std::transform(m_mat[r].begin()+col, m_mat[r].begin()+col+cols_num, block_mat.m_mat[i].begin(), [](T e){ return e; });
+            std::transform(m_mat[r].begin()+col, m_mat[r].begin()+col+cols_num-1, block_mat.m_mat[i].begin(), [](T e){ return e; });
             i++;
         }
 
         return block_mat;
     }
 
-    /**
-     * @brief submatrix
+     /* @brief submatrix
+        /**
      * @param del_row
      * @param del_col
      * @return

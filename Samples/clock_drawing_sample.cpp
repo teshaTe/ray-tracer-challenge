@@ -1,7 +1,7 @@
 #include <Containers/Vector.hpp>
 #include "Containers/Matrix.hpp"
-#include "RayTracer/MatrixUtils.hpp"
-#include "RayTracer/Canvas.hpp"
+#include "RayTracer/Core/MatrixUtils.hpp"
+#include "RayTracer/Core/Canvas.hpp"
 
 using namespace ray_tracer;
 

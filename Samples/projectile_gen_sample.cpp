@@ -1,5 +1,5 @@
 #include "Containers/Vector.hpp"
-#include "RayTracer/Canvas.hpp"
+#include "RayTracer/Core/Canvas.hpp"
 #include <iostream>
 
 
