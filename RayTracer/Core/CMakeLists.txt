@@ -8,7 +8,9 @@ set(RAYTRACER_HEADERS Canvas.hpp
                       RayTracer.h
                       Ray.hpp
                       DataTypes.hpp
-                      shape.h)
+                      shape.h
+                      Light.hpp
+                      Material.hpp)
 
 set(RAYTRACER_SRC  RayTracer.cpp
                    shape.cpp)

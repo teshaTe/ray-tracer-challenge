@@ -35,12 +35,6 @@ Vector<float> Sphere::get_normal(const Vector<float> &point)
     return world_normal.normalize();
 }
 
-Vector<float> Sphere::get_reflection_vector(const Vector<float> &incident, const Vector<float> &normal)
-{
-    return incident - normal* 2.0 * incident.dot(normal);
-}
-
-
 void Sphere::scale(const Vector<float> &scale_vec)
 {
     MatrixUtlities mat_utils{};

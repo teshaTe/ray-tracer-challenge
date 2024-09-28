@@ -196,10 +196,6 @@ TEST(SphereNormalComputationTest, TestingNormalComputation)
     ASSERT_EQ(n6, n6_ref);
 }
 
-TEST(SphereReflectionVectorTest, TestingReflectionVectorComputations)
-{
-
-}
 
 int main(int argc, char *argv[])
 {

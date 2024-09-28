@@ -47,3 +47,8 @@ add_executable(sphere_prim_test sphere_shape.tests.cpp)
 target_include_directories(sphere_prim_test PUBLIC "${PROJECT_ROOT_DIR}/RayTracer" "${PROJECT_ROOT_DIR}")
 target_link_libraries(sphere_prim_test PRIVATE GTest::GTest shapes_lib)
 add_test(sphere_prim_gtest sphere_prim_test)
+
+add_executable(attributes_test attributes.tests.cpp)
+target_include_directories(attributes_test PUBLIC "${PROJECT_ROOT_DIR}/RayTracer" "${PROJECT_ROOT_DIR}")
+target_link_libraries(attributes_test PRIVATE GTest::GTest shapes_lib)
+add_test(attributes_gtest attributes_test)

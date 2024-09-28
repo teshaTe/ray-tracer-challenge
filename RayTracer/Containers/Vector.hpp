@@ -274,6 +274,18 @@ public:
     }
 
     /**
+     * @brief get_reflection
+     * @param in_vec
+     * @param normal
+     * @return
+     */
+    Vector<float> reflect(const Vector<float> &normal)
+    {
+        Vector<float> in_vec{m_vec};
+        return in_vec - normal * 2 * in_vec.dot(normal);
+    }
+
+    /**
      * @brief data
      * @return
      */

@@ -150,6 +150,25 @@ TEST(CrossProductVectorsTest, TestingVector_cross_prod)
     ASSERT_EQ(ref2, res2);
 }
 
+
+TEST(ComputingReflectionTest, TestingReflectionVectorComputation)
+{
+    Vector<float> in_vec1{1, -1, 0};
+    Vector<float> norm_vec1{0, 1, 0};
+
+    Vector<float> refl_vec1 = in_vec1.reflect(norm_vec1);
+    Vector<float> ref_reflect_vec1{1, 1, 0};
+    ASSERT_EQ(refl_vec1, ref_reflect_vec1);
+
+    Vector<float> in_vec2{0, -1, 0};
+    float v2 = std::sqrt(2) / 2.0;
+    Vector<float> norm_vec2{v2, v2, 0};
+
+    Vector<float> refl_vec2 = in_vec2.reflect(norm_vec2);
+    Vector<float> ref_reflect_vec2{1, 1, 0};
+    ASSERT_EQ(refl_vec2, ref_reflect_vec2);
+}
+
 int main(int argc, char *argv[])
 {
     ::testing::InitGoogleTest(&argc, argv);
