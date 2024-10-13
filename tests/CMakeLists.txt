@@ -52,3 +52,8 @@ add_executable(attributes_test attributes.tests.cpp)
 target_include_directories(attributes_test PUBLIC "${PROJECT_ROOT_DIR}/RayTracer" "${PROJECT_ROOT_DIR}")
 target_link_libraries(attributes_test PRIVATE GTest::GTest shapes_lib)
 add_test(attributes_gtest attributes_test)
+
+add_executable(lights_test lights.tests.cpp)
+target_include_directories(lights_test PUBLIC "${PROJECT_ROOT_DIR}/RayTracer" "${PROJECT_ROOT_DIR}")
+target_link_libraries(lights_test PRIVATE GTest::GTest lights_lib)
+add_test(lights_gtest lights_test)
