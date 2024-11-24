@@ -5,6 +5,7 @@
 #include "Core/shape.h"
 #include "Core/DataTypes.hpp"
 #include "Core/Ray.hpp"
+#include "Core/Material.hpp"
 
 
 namespace ray_tracer::shapes {
@@ -14,6 +15,7 @@ class Sphere : public Shape
 private:
     Matrix<float> m_transform_mat;
     Vector<float> m_origin;
+    ray_tracer::materials::BaseMaterial m_material;
     std::string m_obj_name;
     float m_radius;
     int m_id;
@@ -53,6 +55,9 @@ public:
 
     // returns the name of the created sphere
     std::string get_name() const override { return m_obj_name; }
+
+    void set_material(ray_tracer::materials::BaseMaterial &material) override;
+    ray_tracer::materials::BaseMaterial get_assigned_material() override { return m_material; };
 
     // compute the intersection of the rays with the sphere
     std::vector<types::intersection> intersect(const Ray &ray) const override;
