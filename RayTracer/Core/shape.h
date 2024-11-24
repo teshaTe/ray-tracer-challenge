@@ -4,6 +4,7 @@
 #include "Containers/Vector.hpp"
 #include "Core/DataTypes.hpp"
 #include "Core/Ray.hpp"
+#include "Core/Material.hpp"
 
 #include <string>
 #include <vector>
@@ -23,13 +24,15 @@ public:
     virtual Matrix<float> get_transform() = 0;
     virtual Matrix<float> get_rotation_matrix() = 0;
     virtual Vector<float> get_translation() = 0;
-    // virtual std::vector<Vector<float>> get_normals() = 0;
     virtual Vector<float> get_normal(const Vector<float> &point) = 0;
 
     virtual void scale(const Vector<float> &scale_vec) = 0;
 
     virtual int get_id() const = 0;
     virtual std::string get_name() const = 0;
+
+    virtual void set_material(ray_tracer::materials::BaseMaterial &material) = 0;
+    virtual ray_tracer::materials::BaseMaterial get_assigned_material() = 0;
 
     bool get_surface_hit(const std::vector<types::intersection> &intersections, float *res);
 };
