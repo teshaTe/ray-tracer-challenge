@@ -1,12 +1,10 @@
 #ifndef RAYTRACER_H
 #define RAYTRACER_H
 
-#include "DataTypes.hpp"
-#include "Ray.hpp"
+#include "Material.hpp"
+#include "Lights/point_light.h"
+#include "Containers/Vector.hpp"
 
-#include <vector>
-#include <string>
-#include <memory>
 
 namespace ray_tracer {
 
@@ -17,7 +15,11 @@ private:
 public:
     RayTracer() = default;
 
-    Vector<float> get_reflection_vector(const Vector<float> &incident, const Vector<float> &normal);
+    Color<float> compute_lightning(materials::BaseMaterial &material,
+                                   lights::PointLight &light,
+                                   Vector<float> &point,
+                                   Vector<float> &eye_dir,
+                                   Vector<float> &normal);
 
 
     ~RayTracer() = default;
