@@ -5,6 +5,7 @@
 #include "Shapes/sphere.h"
 #include "Core/Ray.hpp"
 #include "Core/DataTypes.hpp"
+#include "Core/Material.hpp"
 
 
 using namespace ray_tracer;
@@ -195,6 +196,23 @@ TEST(SphereNormalComputationTest, TestingNormalComputation)
     Vector<float> n6_ref = Vector<float>{0, 0.97014, -0.24254};
     ASSERT_EQ(n6, n6_ref);
 }
+
+TEST(SphereMaterialAssignmentTest, TestingMaterialAssignment)
+{
+    materials::BaseMaterial mat1;
+    mat1.color = Color<float>{1, 1, 1};
+    mat1.ambient = 0.1;
+    mat1.diffuse = 0.9;
+    mat1.specular = 0.9;
+    mat1.snininess = 200.0;
+
+    shapes::Sphere sphere1(Vector<float>{0, 0, 0}, 1.0, 1);
+    sphere1.set_material(mat1);
+
+    materials::BaseMaterial mat_test = sphere1.get_assigned_material();
+    ASSERT_EQ(mat1, mat_test);
+}
+
 
 
 int main(int argc, char *argv[])
