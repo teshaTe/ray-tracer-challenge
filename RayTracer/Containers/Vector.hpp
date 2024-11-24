@@ -282,7 +282,7 @@ public:
     Vector<float> reflect(const Vector<float> &normal)
     {
         Vector<float> in_vec{m_vec};
-        return in_vec - normal * 2 * in_vec.dot(normal);
+        return in_vec - normal * 2.0f * in_vec.dot(normal);
     }
 
     /**
