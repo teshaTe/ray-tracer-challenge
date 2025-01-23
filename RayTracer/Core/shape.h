@@ -32,7 +32,7 @@ public:
     virtual std::string get_name() const = 0;
 
     virtual void set_material(ray_tracer::materials::BaseMaterial &material) = 0;
-    virtual ray_tracer::materials::BaseMaterial get_assigned_material() = 0;
+    virtual ray_tracer::materials::BaseMaterial get_assigned_material() const = 0;
 
     bool get_surface_hit(const std::vector<types::intersection> &intersections, float *res);
 };

@@ -135,7 +135,19 @@ public:
      */
     Color<T> hadamard_product(const Color<T>& other)
     {
-        Color<T> color = Color<T>( m_color[0]*other.m_color[0],  m_color[1]*other.m_color[1], m_color[2]*other.m_color[2]);
+        Color<T> color = Color<T>(m_color[0]*other.m_color[0],  m_color[1]*other.m_color[1], m_color[2]*other.m_color[2]);
+        return color;
+    }
+
+    Color<int> to_int_rgb()
+    {
+        Color<int> color = Color<int>(m_color[0]*255, m_color[1]*255, m_color[2]*255);
+        return color;
+    }
+
+    Color<T> to_float_rgb()
+    {
+        Color<T> color = Color<T>(m_color[0] / 255, m_color[1] / 255, m_color[2] / 255);
         return color;
     }
 
