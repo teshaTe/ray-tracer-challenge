@@ -141,7 +141,7 @@ public:
     Canvas<T> load_ppm(const std::string& file_name, const std::string& path)
     {
         try {
-            std::string in_path = path + "\\" + file_name + ".ppm";
+            std::string in_path = path + "//" + file_name + ".ppm";
             std::ifstream file(in_path.c_str());
             file.exceptions(std::ifstream::eofbit | std::ifstream::failbit | std::ifstream::badbit);
             std::vector<std::string> header;
@@ -153,8 +153,6 @@ public:
             }
 
             std::vector<std::string> img_size = SplitString(header[1], ' ');
-//            std::cout << "w = " << img_size[0] << "; h = " << img_size[1] << std::endl;
-//            std::cout << header[2] << std::endl;
 
             int width = std::stoi(img_size[0]);
             int height = std::stoi(img_size[1]);

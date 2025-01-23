@@ -57,7 +57,7 @@ public:
     std::string get_name() const override { return m_obj_name; }
 
     void set_material(ray_tracer::materials::BaseMaterial &material) override;
-    ray_tracer::materials::BaseMaterial get_assigned_material() override { return m_material; };
+    ray_tracer::materials::BaseMaterial get_assigned_material() const override { return m_material; };
 
     // compute the intersection of the rays with the sphere
     std::vector<types::intersection> intersect(const Ray &ray) const override;
