@@ -1,6 +1,9 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
+#include <memory>
+#include <string>
+
 #include "Containers/Vector.hpp"
 #include "Core/shape.h"
 #include "Core/DataTypes.hpp"
@@ -19,6 +22,7 @@ private:
     std::string m_obj_name;
     float m_radius;
     int m_id;
+    std::string m_type = "sphere";
 
 public:
     Sphere(const Vector<float> &origin, const float radius, const int id);
@@ -28,6 +32,8 @@ public:
      * @return
      */
     float get_radius() const { return m_radius; }
+
+    std::string get_type() const override { return m_type; }
 
     /**
      * @brief The descritption for functions below can be found in shape.h file.
@@ -53,14 +59,15 @@ public:
     // returns the id of the object
     int get_id() const override { return m_id; }
 
-    // returns the name of the created sphere
-    std::string get_name() const override { return m_obj_name; }
-
     void set_material(ray_tracer::materials::BaseMaterial &material) override;
     ray_tracer::materials::BaseMaterial get_assigned_material() const override { return m_material; };
 
     // compute the intersection of the rays with the sphere
     std::vector<types::intersection> intersect(const Ray &ray) const override;
+
+    std::unique_ptr<shapes::Shape> clone() const override {
+        return std::make_unique<Sphere>(*this); // Copy itself
+    }
 
     ~Sphere() = default;
 };

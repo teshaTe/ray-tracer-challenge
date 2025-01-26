@@ -8,6 +8,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace ray_tracer::shapes {
 
@@ -15,21 +16,21 @@ class Shape
 {
 public:
     virtual ~Shape() = default;
+    virtual std::unique_ptr<Shape> clone() const = 0; // Clone function
 
-    virtual Vector<float> get_origin() const = 0;
     virtual std::vector<types::intersection> intersect(const Ray &ray) const = 0;
 
     virtual void transform(const Matrix<float> &transform) = 0;
     virtual void transform(const Vector<float> &tr_vec, const Matrix<float> &rot_mat) = 0;
+    virtual void scale(const Vector<float> &scale_vec) = 0;
+
     virtual Matrix<float> get_transform() = 0;
     virtual Matrix<float> get_rotation_matrix() = 0;
     virtual Vector<float> get_translation() = 0;
     virtual Vector<float> get_normal(const Vector<float> &point) = 0;
-
-    virtual void scale(const Vector<float> &scale_vec) = 0;
-
     virtual int get_id() const = 0;
-    virtual std::string get_name() const = 0;
+    virtual std::string get_type() const = 0;
+    virtual Vector<float> get_origin() const = 0;
 
     virtual void set_material(ray_tracer::materials::BaseMaterial &material) = 0;
     virtual ray_tracer::materials::BaseMaterial get_assigned_material() const = 0;
