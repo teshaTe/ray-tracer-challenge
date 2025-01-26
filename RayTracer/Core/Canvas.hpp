@@ -107,7 +107,8 @@ public:
     {
         try
         {
-            std::string out_path = output_path + "\\" + file_name + ".ppm";
+            std::string out_path = output_path + "/" + file_name + ".ppm";
+            std::cout << "Saving file: " << out_path << std::endl;
             std::ofstream file;
             file.open(out_path);
             file.exceptions(std::ifstream::eofbit | std::ifstream::failbit | std::ifstream::badbit);
