@@ -10,10 +10,14 @@ set(RAYTRACER_HEADERS Canvas.hpp
                       DataTypes.hpp
                       shape.h
                       Light.hpp
-                      Material.hpp)
+                      Material.hpp
+                      worldscene.h
+                  )
 
 set(RAYTRACER_SRC  RayTracer.cpp
-                   shape.cpp)
+                   shape.cpp
+                   worldscene.cpp
+               )
 
 set(CONTAINERS_SRC ${PROJECT_ROOT_DIR}/RayTracer/Containers/Matrix.hpp
                    ${PROJECT_ROOT_DIR}/RayTracer/Containers/Vector.hpp
