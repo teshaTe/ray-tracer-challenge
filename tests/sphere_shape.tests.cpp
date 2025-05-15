@@ -6,6 +6,7 @@
 #include "Core/Ray.hpp"
 #include "Core/DataTypes.hpp"
 #include "Core/Material.hpp"
+#include "Core/MatrixUtils.hpp"
 
 
 using namespace ray_tracer;
@@ -123,13 +124,13 @@ TEST(SphereScaledRayIntersectionTest, TestingScaledSphereRayIntersection)
     shapes::Sphere sphere(Vector<float>{0, 0, 0}, 1.0, 1);
     sphere.scale(Vector<float>{2, 2, 2});
 
-    Matrix<float> ray_tr_mat = sphere.get_transform().inv();
-    Vector<float> ray_orig = ray_tr_mat.mul(ray.get_origin()).to_vec_1x3();
-    Vector<float> ray_dir = ray_tr_mat.mul(ray.get_direction()).to_vec_1x3();
+    // Matrix<float> ray_tr_mat = sphere.get_transform().inv();
+    // Vector<float> ray_orig = ray_tr_mat.mul(ray.get_origin()).to_vec_1x3();
+    // Vector<float> ray_dir = ray_tr_mat.mul(ray.get_direction()).to_vec_1x3();
 
-    Ray new_ray{ray_orig, ray_dir};
+    // Ray new_ray{ray_orig, ray_dir};
 
-    std::vector<types::intersection> intersections = sphere.intersect(new_ray);
+    std::vector<types::intersection> intersections = sphere.intersect(ray);
 
     ASSERT_EQ(intersections.size(), 2);
     ASSERT_EQ(intersections[0].t, 3);
@@ -188,8 +189,9 @@ TEST(SphereNormalComputationTest, TestingNormalComputation)
     shapes::Sphere sphere2(Vector<float>{0, 0, 0}, 1.0, 2);
     sphere2.scale(Vector<float>{1, 0.5, 1});
 
-    MatrixUtlities mat_utils;
+    MatrixUtlities mat_utils{};
     Matrix<float> R = mat_utils.rotation_mat_ZAxis(M_PI/5.0);
+
     sphere2.transform(Vector<float>{0, 0, 0}, R);
     float val2 = std::sqrt(2.0)/2.0;
     Vector<float> n6 = sphere2.get_normal(Vector<float>{0, val2, -val2});
