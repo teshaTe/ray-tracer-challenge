@@ -46,7 +46,7 @@ private:
     std::vector<std::unique_ptr<lights::Light>> m_lights;
 };
 
-}
+} //namespace ray_tracer
 
 
 
