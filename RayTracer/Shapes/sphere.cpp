@@ -37,6 +37,7 @@ Vector<float> Sphere::get_normal(const Vector<float> &point)
     Vector<float> obj_point = m_transform_mat.inv().mul(point).to_vec_1x3();
     Vector<float> normal = obj_point - m_origin;
     Vector<float> world_normal = m_transform_mat.inv().tr().mul(normal).to_vec_1x3();
+
     return world_normal.normalize();
 }
 
@@ -45,6 +46,10 @@ void Sphere::scale(const Vector<float> &scale_vec)
     MatrixUtlities mat_utils{};
     Matrix<float> S = mat_utils.scaling_mat(scale_vec[0], scale_vec[1], scale_vec[2]);
     m_transform_mat = m_transform_mat.mul(S);
+
+    m_origin = m_origin * scale_vec;
+    if (scale_vec[0] == scale_vec[1] == scale_vec[2])
+        m_radius = m_radius * scale_vec[0];
 }
 
 void Sphere::set_material(materials::BaseMaterial &material)
@@ -52,16 +57,20 @@ void Sphere::set_material(materials::BaseMaterial &material)
     m_material = material;
 }
 
-std::vector<types::intersection> Sphere::intersect(const Ray &ray) const
+std::vector<types::intersection> Sphere::intersect(const Ray &ray)
 {
-    Vector<float> sphere_to_ray_vec = ray.get_origin() - m_origin;
-    float a = ray.get_direction().dot(ray.get_direction());
-    float b = 2.0f * ray.get_direction().dot(sphere_to_ray_vec);
+    Vector<float> tr_dir = m_transform_mat.inv().mul(ray.get_direction()).to_vec_1x3();
+    Vector<float> tr_origin = m_transform_mat.inv().mul(ray.get_origin()).to_vec_1x3();
+    Ray tr_ray{tr_origin, tr_dir};
+
+    Vector<float> sphere_to_ray_vec = tr_ray.get_origin() - m_origin;
+    float a = tr_ray.get_direction().dot(tr_ray.get_direction());
+    float b = 2.0f * tr_ray.get_direction().dot(sphere_to_ray_vec);
     float c = sphere_to_ray_vec.dot(sphere_to_ray_vec) - 1.0f;
 
     std::vector<types::intersection> intersections_out;
-    float D = b*b - 4*a*c;
-    if(D < 0)
+    float D = b*b - 4.0f*a*c;
+    if(D < 0.0f)
     {
         return intersections_out;
     }
