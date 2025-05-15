@@ -140,6 +140,19 @@ public:
     }
 
     /**
+     * @brief operator *
+     * @param s
+     * @return
+     */
+    Vector<T> operator*(const Vector<T> other) const
+    {
+        std::vector<T> tmp;
+        tmp.resize(m_vec.size());
+        std::transform(m_vec.begin(), m_vec.end(), other.m_vec.begin(), tmp.begin(), std::multiplies<T>());
+        return Vector<T>{tmp};
+    }
+
+    /**
      * @brief operator /
      * @param s
      * @return
