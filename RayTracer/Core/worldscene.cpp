@@ -20,10 +20,16 @@ void WorldScene::print_scene_objects()
     }
 }
 
-// std::vector<types::intersection> WorldScene::intersect(const Ray &ray)
-// {
-
-// }
-
+std::vector<types::intersection> WorldScene::intersect(const Ray &ray)
+{
+    std::vector<types::intersection> all_intersections;
+    for(auto &obj : m_shapes)
+    {
+        std::vector<types::intersection> intersections = obj->intersect(ray);
+        all_intersections.insert(all_intersections.end(), intersections.begin(), intersections.end());
+    }
+    std::sort(all_intersections.begin(), all_intersections.end());
+    return all_intersections;
+}
 
 } // namespace ray_tracer
