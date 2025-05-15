@@ -14,6 +14,8 @@ using namespace ray_tracer;
 int main(int argc, char *argv[])
 {
     shapes::Sphere sphere{Vector<float>{0, 0, 0}, 1.0, 0};
+    sphere.scale(Vector<float>{0.5, 1.0, 0.1});
+
     materials::BaseMaterial mat;
     mat.color = Color<float>{1., 0.2, 1.};
     mat.ambient = 0.1;
@@ -27,8 +29,7 @@ int main(int argc, char *argv[])
 
     Vector<float> rays_origin{0, 0, -5};
 
-    int canvas_size = 512;
-
+    int canvas_size = 1024;
     Canvas<int> image{canvas_size, canvas_size};
 
     float wall_size = 7.0;
@@ -62,7 +63,7 @@ int main(int argc, char *argv[])
     }
 
     std::string file_name = "sphere_image";
-    std::string path = "/home/tesha/Documents/C++/ray-tracer-challenge/Build";
+    std::string path = "";
 
     image.save_to_ppm(file_name, path);
     return 0;
