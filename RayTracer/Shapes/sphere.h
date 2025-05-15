@@ -63,7 +63,7 @@ public:
     ray_tracer::materials::BaseMaterial get_assigned_material() const override { return m_material; };
 
     // compute the intersection of the rays with the sphere
-    std::vector<types::intersection> intersect(const Ray &ray) const override;
+    std::vector<types::intersection> intersect(const Ray &ray) override;
 
     std::unique_ptr<shapes::Shape> clone() const override {
         return std::make_unique<Sphere>(*this); // Copy itself

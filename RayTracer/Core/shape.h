@@ -18,7 +18,7 @@ public:
     virtual ~Shape() = default;
     virtual std::unique_ptr<Shape> clone() const = 0; // Clone function
 
-    virtual std::vector<types::intersection> intersect(const Ray &ray) const = 0;
+    virtual std::vector<types::intersection> intersect(const Ray &ray) = 0;
 
     virtual void transform(const Matrix<float> &transform) = 0;
     virtual void transform(const Vector<float> &tr_vec, const Matrix<float> &rot_mat) = 0;
