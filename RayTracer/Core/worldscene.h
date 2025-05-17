@@ -35,6 +35,7 @@ public:
     }
 
     std::vector<types::intersection> intersect(const Ray &ray);
+    types::intersection_state precompute_intersection_state(shapes::Shape *shape, types::intersection &intersection, Ray &ray);
 
     ~WorldScene() = default;
 
