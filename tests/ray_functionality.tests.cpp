@@ -20,10 +20,10 @@ TEST(ComputingPositionTest, TestingRayPositionComputation)
     Vector<float> direction{1, 0, 0};
     Ray ray(origin, direction);
 
-    Vector<float> p1 = ray.position(ray, 0);
-    Vector<float> p2 = ray.position(ray, 1);
-    Vector<float> p3 = ray.position(ray, -1);
-    Vector<float> p4 = ray.position(ray, 2.5);
+    Vector<float> p1 = ray.position(0);
+    Vector<float> p2 = ray.position(1);
+    Vector<float> p3 = ray.position(-1);
+    Vector<float> p4 = ray.position(2.5);
 
     Vector<float> p2_ref{3, 3, 4};
     Vector<float> p3_ref{1, 3, 4};

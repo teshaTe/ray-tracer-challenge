@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 
             if(intersections.size() > 0)
             {
-                Vector<float> point = ray.position(ray, intersections[0].t);
+                Vector<float> point = ray.position(intersections[0].t);
                 Vector<float> normal = sphere.get_normal(point);
                 Vector<float> eye = ray.get_direction().negate();
                 materials::BaseMaterial sp_mat = sphere.get_assigned_material();
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     }
 
     std::string file_name = "sphere_image";
-    std::string path = "";
+    std::string path = "/home/tesha/Documents/C++/ray-tracer-challenge/build";
 
     image.save_to_ppm(file_name, path);
     return 0;
