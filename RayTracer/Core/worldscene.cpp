@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 #include "worldscene.h"
 
@@ -30,6 +31,18 @@ std::vector<types::intersection> WorldScene::intersect(const Ray &ray)
     }
     std::sort(all_intersections.begin(), all_intersections.end());
     return all_intersections;
+}
+
+types::intersection_state WorldScene::precompute_intersection_state(shapes::Shape *shape, types::intersection &intersection, Ray &ray)
+{
+    types::intersection_state state{
+        intersection.obj_type,
+        ray.position(intersection.t),
+        ray.get_direction().negate(),
+        shape->get_normal(state.point),
+        intersection.t,
+    };
+    return state;
 }
 
 } // namespace ray_tracer
