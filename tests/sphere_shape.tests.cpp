@@ -124,12 +124,6 @@ TEST(SphereScaledRayIntersectionTest, TestingScaledSphereRayIntersection)
     shapes::Sphere sphere(Vector<float>{0, 0, 0}, 1.0, 1);
     sphere.scale(Vector<float>{2, 2, 2});
 
-    // Matrix<float> ray_tr_mat = sphere.get_transform().inv();
-    // Vector<float> ray_orig = ray_tr_mat.mul(ray.get_origin()).to_vec_1x3();
-    // Vector<float> ray_dir = ray_tr_mat.mul(ray.get_direction()).to_vec_1x3();
-
-    // Ray new_ray{ray_orig, ray_dir};
-
     std::vector<types::intersection> intersections = sphere.intersect(ray);
 
     ASSERT_EQ(intersections.size(), 2);
