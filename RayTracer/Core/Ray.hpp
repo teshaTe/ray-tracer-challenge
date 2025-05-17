@@ -29,9 +29,9 @@ public:
      * @param t
      * @return
      */
-    Vector<float> position(const Ray &ray, const float t)
+    Vector<float> position(const float t)
     {
-        return ray.m_origin + ray.m_direction * t;
+        return m_origin + m_direction * t;
     }
 
     /**
