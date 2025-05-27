@@ -24,8 +24,11 @@ public:
     void add_shape(const shapes::Shape &shape) { m_shapes.push_back(shape.clone()); }
     void add_light(const lights::Light &light) { m_lights.push_back(light.clone()); }
 
-    void delete_shape(const int& id);
-    void delete_light(const int& id);
+    const std::vector<std::unique_ptr<shapes::Shape>>& get_shapes() { return m_shapes; }
+    const std::vector<std::unique_ptr<lights::Light>>& get_lights() { return m_lights; }
+
+    void delete_shape(const int& id, const std::string shape_type);
+    void delete_light(const int& id, const std::string light_type);
 
     void clear() {
         m_shapes.clear();
@@ -35,7 +38,9 @@ public:
     }
 
     std::vector<types::intersection> intersect(const Ray &ray);
-    types::intersection_state precompute_intersection_state(shapes::Shape *shape, types::intersection &intersection, Ray &ray);
+    types::intersection_state precompute_intersection_state(shapes::Shape &shape, types::intersection &intersection, Ray &ray);
+
+    void create_default_world();
 
     ~WorldScene() = default;
 
