@@ -1,6 +1,6 @@
 #include "sphere.h"
-#include "Containers/Color.hpp"
 #include "Core/MatrixUtils.hpp"
+
 
 namespace ray_tracer::shapes {
 
@@ -11,10 +11,7 @@ Sphere::Sphere(const Vector<float> &origin, const float radius, const int id): m
                                                                                m_transform_mat{Matrix<float>{4, 4}}
 {
     m_transform_mat.I();
-    m_material.color = Color<float>{0, 1, 0};
-    m_material.diffuse = 0.9;
-    m_material.snininess = 0.1;
-    m_material.specular = 0.2;
+    m_material = ray_tracer::materials::BaseMaterial();
 }
 
 void Sphere::transform(const Matrix<float> &transform)
