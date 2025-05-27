@@ -200,7 +200,7 @@ TEST(SphereMaterialAssignmentTest, TestingMaterialAssignment)
     mat1.ambient = 0.1;
     mat1.diffuse = 0.9;
     mat1.specular = 0.9;
-    mat1.snininess = 200.0;
+    mat1.shininess = 200.0;
 
     shapes::Sphere sphere1(Vector<float>{0, 0, 0}, 1.0, 1);
     sphere1.set_material(mat1);
