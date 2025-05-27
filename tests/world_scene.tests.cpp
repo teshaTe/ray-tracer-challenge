@@ -5,7 +5,6 @@
 #include "Containers/Vector.hpp"
 #include "RayTracer/Shapes/sphere.h"
 #include "Core/Material.hpp"
-#include "Core/RayTracer.h"
 #include "Lights/point_light.h"
 #include "Core/worldscene.h"
 
@@ -21,13 +20,13 @@ TEST(WorldSceneEmptyTest, TestingWorldSceneEmpty)
 
 TEST(WorldSceneCreationTest, TestingWorldScene)
 {
-    lights::PointLight plight{Vector<float>(-10, 10, -10), Color<float>{1, 1, 1}};
+    lights::PointLight plight{Vector<float>(-10, 10, -10), Color<float>{1, 1, 1}, 0};
 
     shapes::Sphere sp1{Vector<float>{0, 0, 0}, 1.0, 0};
     materials::BaseMaterial mat1;
     mat1.ambient = 0.1;
     mat1.color = Color<float>{0.8, 1.0, 0.6};
-    mat1.snininess = 200.0;
+    mat1.shininess = 200.0;
     mat1.diffuse = 0.7;
     mat1.specular = 0.2;
     sp1.set_material(mat1);
@@ -54,7 +53,7 @@ TEST(WorldSceneIntersectionTest, TestingWOrldSceneIntersection)
     materials::BaseMaterial mat1;
     mat1.ambient = 0.1;
     mat1.color = Color<float>{0.8, 1.0, 0.6};
-    mat1.snininess = 200.0;
+    mat1.shininess = 200.0;
     mat1.diffuse = 0.7;
     mat1.specular = 0.2;
     sp1.set_material(mat1);
@@ -78,24 +77,44 @@ TEST(WorldSceneIntersectionTest, TestingWOrldSceneIntersection)
 
 TEST(WorldScenePrecompIntersectionStateTest, TestingWorldSceneIntersectionStatePrecomp)
 {
-    Ray ray{Vector<float>{0, 0, -5}, Vector<float>{0, 0, 1}};
+    Ray ray1{Vector<float>{0, 0, -5}, Vector<float>{0, 0, 1}};
     shapes::Sphere sp{Vector<float>{0, 0, 0}, 1.0, 0};
-    types::intersection intersection;
-    intersection.obj_type = sp.get_type();
-    intersection.t = 4;
+    types::intersection intersection1;
+    intersection1.obj_type = sp.get_type();
+    intersection1.t = 4;
 
     WorldScene world_scene{};
-    types::intersection_state intersection_state = world_scene.precompute_intersection_state(&sp, intersection, ray);
+    types::intersection_state intersection_state1 = world_scene.precompute_intersection_state(sp, intersection1, ray1);
 
-    Vector<float> point_ref{0, 0, -1};
-    Vector<float> eye_dir_ref{0, 0, -1};
-    Vector<float> normal_ref{0, 0, -1};
+    Vector<float> point_ref1{0, 0, -1};
+    Vector<float> eye_dir_ref1{0, 0, -1};
+    Vector<float> normal_ref1{0, 0, -1};
 
-    ASSERT_EQ(intersection_state.t, intersection.t);
-    ASSERT_EQ(intersection_state.obj_type, intersection.obj_type);
-    ASSERT_EQ(intersection_state.point, point_ref);
-    ASSERT_EQ(intersection_state.eye_dir, eye_dir_ref);
-    ASSERT_EQ(intersection_state.normal, normal_ref);
+    ASSERT_EQ(intersection_state1.t, intersection1.t);
+    ASSERT_EQ(intersection_state1.obj_type, intersection1.obj_type);
+    ASSERT_EQ(intersection_state1.point, point_ref1);
+    ASSERT_EQ(intersection_state1.eye_dir, eye_dir_ref1);
+    ASSERT_EQ(intersection_state1.normal, normal_ref1);
+    ASSERT_EQ(intersection_state1.inside, false);
+
+    Ray ray2{Vector<float>{0, 0, 0}, Vector<float>{0, 0, 1}};
+    types::intersection intersection2;
+    intersection2.obj_type = sp.get_type();
+    intersection2.obj_id = sp.get_id();
+    intersection2.t = 1;
+
+    types::intersection_state intersection_state2 = world_scene.precompute_intersection_state(sp, intersection2, ray2);
+
+    Vector<float> point_ref2{0, 0, 1};
+    Vector<float> eye_dir_ref2{0, 0, -1};
+    Vector<float> normal_ref2{0, 0, -1};
+
+    ASSERT_EQ(intersection_state2.t, intersection2.t);
+    ASSERT_EQ(intersection_state2.obj_type, intersection2.obj_type);
+    ASSERT_EQ(intersection_state2.point, point_ref2);
+    ASSERT_EQ(intersection_state2.eye_dir, eye_dir_ref2);
+    ASSERT_EQ(intersection_state2.normal, normal_ref2);
+    ASSERT_EQ(intersection_state2.inside, true);
 }
 
 
