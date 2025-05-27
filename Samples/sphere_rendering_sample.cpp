@@ -14,17 +14,17 @@ using namespace ray_tracer;
 int main(int argc, char *argv[])
 {
     shapes::Sphere sphere{Vector<float>{0, 0, 0}, 1.0, 0};
-    sphere.scale(Vector<float>{0.5, 1.0, 0.1});
+    sphere.scale(Vector<float>{0.5, 0.5, 0.5});
 
     materials::BaseMaterial mat;
     mat.color = Color<float>{1., 0.2, 1.};
     mat.ambient = 0.1;
     mat.diffuse = 0.9;
-    mat.snininess = 200.0;
+    mat.shininess = 200.0;
     mat.specular = 0.9;
     sphere.set_material(mat);
 
-    lights::PointLight plight{Vector<float>{-10, 10, -10}, Color<float>{1, 1, 1}};
+    lights::PointLight plight{Vector<float>{-10, 10, -10}, Color<float>{1, 1, 1}, 0};
     RayTracer ray_tracer;
 
     Vector<float> rays_origin{0, 0, -5};
