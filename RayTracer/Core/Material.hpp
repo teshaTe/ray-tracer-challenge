@@ -11,40 +11,17 @@ namespace ray_tracer::materials {
  */
 struct BaseMaterial
 {
-    Color<float> color{0, 1, 0};
-    float ambient = 0;
-    float diffuse = 0;
-    float specular = 0;
-    float snininess = 0;
+    Color<float> color{1, 1, 1};
+    float ambient = 0.1;
+    float diffuse = 0.9;
+    float specular = 0.9;
+    float shininess = 200.0;
 
     bool operator==(const BaseMaterial &other) const
     {
-        if(color == other.color)
-        {
-            if(ambient == other.ambient)
-            {
-                if(diffuse == other.diffuse)
-                {
-                    if (specular == other.specular)
-                    {
-                        if(snininess==other.snininess)
-                        {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    } else {
-                        return false;
-                    }
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
+        return other.color == color && other.ambient == ambient &&
+               other.diffuse == diffuse && other.specular == specular &&
+               other.shininess == shininess;
     }
 };
 
