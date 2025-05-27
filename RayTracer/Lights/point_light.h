@@ -19,7 +19,7 @@ private:
     std::string m_type = "point_light";
 
 public:
-    PointLight(const Vector<float> &origin, const Color<float> &intensity);
+    PointLight(const Vector<float> &origin, const Color<float> &intensity, int id);
 
     Vector<float> get_origin() const override { return m_origin; };
     Color<float> get_intensity() const override { return m_intensity; };
