@@ -11,6 +11,7 @@ namespace ray_tracer::types {
 struct intersection
 {
     std::string obj_type;
+    int obj_id;
     float t;
 
     bool operator<(const intersection& obj) const
@@ -23,10 +24,12 @@ struct intersection
 struct intersection_state
 {
     std::string obj_type;
+    int obj_id;
     Vector<float> point;
     Vector<float> eye_dir;
     Vector<float> normal;
     float t;
+    bool inside;
 };
 
 } // namespace ray_tracer::types
