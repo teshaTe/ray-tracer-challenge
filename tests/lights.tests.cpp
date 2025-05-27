@@ -16,7 +16,7 @@ TEST(PointLight, TestingPointLight)
     const Color<float> intensity1{1, 1, 1};
     const Vector<float> plight_origin1{0, 0, 0};
 
-    lights::PointLight plight(plight_origin1, intensity1);
+    lights::PointLight plight(plight_origin1, intensity1, 0);
 
     ASSERT_EQ(intensity1, plight.get_intensity());
     ASSERT_EQ(plight_origin1, plight.get_origin());
