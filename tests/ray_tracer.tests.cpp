@@ -5,9 +5,9 @@
 #include "Containers/Vector.hpp"
 #include "Core/Material.hpp"
 #include "Core/RayTracer.h"
-#include "Core/worldscene.h"
+#include "Core/WorldScene.h"
 #include "Lights/point_light.h"
-#include "Shapes/sphere.h"
+#include "Shapes/Sphere.h"
 
 
 using namespace ray_tracer;
@@ -61,17 +61,20 @@ TEST(RayTracerWorldSceneShadingTest, TestingWorldSceneShading)
     world_scene.create_default_world();
     Ray ray{Vector<float>{0, 0, -5}, Vector<float>{0, 0, 1}};
 
+    auto &shapes = world_scene.get_shapes();
+    auto &lights = world_scene.get_lights();
+
     types::intersection intersection{
-        world_scene.get_shapes()[0].get()->get_type(),
-        world_scene.get_shapes()[0].get()->get_id(),
+        shapes[0].get()->get_type(),
+        shapes[0].get()->get_id(),
         4
     };
 
     RayTracer ray_tracer{};
-    types::intersection_state intersection_state = world_scene.precompute_intersection_state(*world_scene.get_shapes()[0],
+    types::intersection_state intersection_state = world_scene.precompute_intersection_state(*shapes[0],
                                                                                               intersection,
                                                                                               ray);
-    Color<float> shading_color1 = ray_tracer.compute_shading(world_scene, intersection_state);
+    Color<float> shading_color1 = ray_tracer.compute_shading(shapes[0]->clone(), lights, intersection_state);
     Color<float> ref_color1{0.38066, 0.47583, 0.2855};
 
     ASSERT_EQ(shading_color1, ref_color1);
@@ -91,22 +94,72 @@ TEST(RayTracerWorldSceneShadingInsideTest, TestingWorldSceneShadingInside)
     world_scene.delete_light(0, "point_light");
     world_scene.add_light(plight);
 
+    auto &shapes = world_scene.get_shapes();
+    auto &lights = world_scene.get_lights();
+
     types::intersection intersection{
-        world_scene.get_shapes()[1].get()->get_type(),
-        world_scene.get_shapes()[1].get()->get_id(),
+        shapes[1].get()->get_type(),
+        shapes[1].get()->get_id(),
         0.5
     };
 
-    types::intersection_state intersection_state = world_scene.precompute_intersection_state(*world_scene.get_shapes()[1],
+    types::intersection_state intersection_state = world_scene.precompute_intersection_state(*shapes[1],
                                                                                              intersection,
                                                                                              ray);
-    Color<float> shading_color = ray_tracer.compute_shading(world_scene, intersection_state);
+    Color<float> shading_color = ray_tracer.compute_shading(shapes[1]->clone(), lights, intersection_state);
     Color<float> ref_color{0.90498, 0.90498, 0.90498};
 
     ASSERT_EQ(shading_color, ref_color);
-
 }
 
+TEST(RayTracerWorldSceneRenderingEdgeCases,TestingWorldSceneRenderingEdgeCases)
+{
+    // test no object got intersected
+    WorldScene world_scene1{};
+    world_scene1.create_default_world();
+
+    Ray ray1{Vector<float>{0, 0, -5}, Vector<float>{0, 1, 0}};
+    RayTracer ray_tracer{};
+    Color<float> shading_color1 = ray_tracer.get_color_at(world_scene1, ray1);
+    Color<float> ref_color1{0.0, 0.0, 0.0};
+    ASSERT_EQ(shading_color1, ref_color1);
+
+    // test on;y exterior object got as hit
+    Ray ray2{Vector<float>{0, 0, -5}, Vector<float>{0, 0, 1}};
+    Color<float> shading_color2 = ray_tracer.get_color_at(world_scene1, ray2);
+
+    Color<float> ref_color2{0.38066, 0.47583, 0.2855};
+    ASSERT_EQ(shading_color2, ref_color2);
+
+    //  test only interior object got a hit
+    WorldScene world_scene2{};
+    materials::BaseMaterial mat1;
+    mat1.color = Color<float>{0.8, 1.0, 0.6};
+    mat1.ambient = 1.0;
+    mat1.diffuse = 0.7;
+    mat1.specular = 0.2;
+    mat1.shininess = 200.0;
+
+    shapes::Sphere sp1{Vector<float>{0.0, 0.0, 0.0}, 1.0, 0};
+    sp1.set_material(mat1);
+
+    shapes::Sphere sp2{Vector<float>{0.0, 0.0, 0.0}, 0.5, 1};
+    materials::BaseMaterial mat2;
+    mat2.ambient = 1.0;
+    sp2.set_material(mat2);
+
+    world_scene2.add_shape(sp1);
+    world_scene2.add_shape(sp2);
+
+    lights::PointLight plight1{Vector<float>{-10, 10, -10}, Color<float>{1, 1, 1}, 0};
+    world_scene2.add_light(plight1);
+
+    Ray ray3{Vector<float>{0, 0, 0.75}, Vector<float>{0, 0, -1}};
+    Color<float> shading_color3 = ray_tracer.get_color_at(world_scene2, ray3);
+
+    Color<float> ref_color3{1, 1, 1};
+    ASSERT_EQ(shading_color3, ref_color3);
+}
 
 
 int main(int argc, char *argv[])
