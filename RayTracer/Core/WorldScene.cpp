@@ -1,9 +1,9 @@
 #include <iostream>
 #include <memory>
 
-#include "worldscene.h"
+#include "WorldScene.h"
 #include "Lights/point_light.h"
-#include "Shapes/sphere.h"
+#include "Shapes/Sphere.h"
 
 
 namespace ray_tracer {
@@ -87,12 +87,10 @@ void WorldScene::create_default_world()
     mat1.specular = 0.2;
     mat1.shininess = 200.0;
 
-    Ray ray1{Vector<float>{0, 0, -5}, Vector<float>{0, 0, 1}};
-    shapes::Sphere sp1{Vector<float>{0, 0, 0}, 1, 0};
+    shapes::Sphere sp1{Vector<float>{0, 0, 0}, 1.0, 0};
     sp1.set_material(mat1);
 
-    shapes::Sphere sp2{Vector<float>{0.0, 0.0, 0.0}, 1.0, 1};
-    sp2.scale(Vector<float>{0.5, 0.5, 0.5});
+    shapes::Sphere sp2{Vector<float>{0.0, 0.0, 0.0}, 0.5, 1};
     materials::BaseMaterial mat2;
     sp2.set_material(mat2);
 
