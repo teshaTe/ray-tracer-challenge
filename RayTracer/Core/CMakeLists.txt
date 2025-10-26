@@ -4,19 +4,21 @@ project(RayTracer-core LANGUAGES CXX)
 ####################### ESSENTIAL INCLUDES/PROJECT FILES ##########################
 
 set(RAYTRACER_HEADERS Canvas.hpp
+                      Camera.h
                       MatrixUtils.hpp
                       RayTracer.h
                       Ray.hpp
                       DataTypes.hpp
-                      shape.h
+                      Shape.h
                       Light.hpp
                       Material.hpp
-                      worldscene.h
+                      WorldScene.h
                   )
 
 set(RAYTRACER_SRC  RayTracer.cpp
-                   shape.cpp
-                   worldscene.cpp
+                   Shape.cpp
+                   Camera.cpp
+                   WorldScene.cpp
                )
 
 set(CONTAINERS_SRC ${PROJECT_ROOT_DIR}/RayTracer/Containers/Matrix.hpp
