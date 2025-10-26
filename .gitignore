@@ -4,3 +4,5 @@ build/
 CMakeLists.txt.user
 
 CMakeLists.txt.user.016f875
+
+RayTracer/Core/CMakeLists.txt.autosave
