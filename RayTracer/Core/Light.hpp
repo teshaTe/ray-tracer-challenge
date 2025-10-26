@@ -5,7 +5,6 @@
 
 #include "Containers/Vector.hpp"
 #include "Containers/Color.hpp"
-#include "MatrixUtils.hpp"
 
 
 namespace ray_tracer::lights {
