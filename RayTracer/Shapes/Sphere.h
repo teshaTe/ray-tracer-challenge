@@ -5,7 +5,7 @@
 #include <string>
 
 #include "Containers/Vector.hpp"
-#include "Core/shape.h"
+#include "Core/Shape.h"
 #include "Core/DataTypes.hpp"
 #include "Core/Ray.hpp"
 #include "Core/Material.hpp"
