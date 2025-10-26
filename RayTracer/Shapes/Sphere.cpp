@@ -1,4 +1,4 @@
-#include "sphere.h"
+#include "Sphere.h"
 #include "Core/MatrixUtils.hpp"
 
 
@@ -11,6 +11,7 @@ Sphere::Sphere(const Vector<float> &origin, const float radius, const int id): m
                                                                                m_transform_mat{Matrix<float>{4, 4}}
 {
     m_transform_mat.I();
+    m_transform_mat = m_transform_mat * m_radius;
     m_material = ray_tracer::materials::BaseMaterial();
 }
 
