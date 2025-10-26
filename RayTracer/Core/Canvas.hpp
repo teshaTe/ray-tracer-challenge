@@ -7,8 +7,6 @@
 #include <fstream>
 #include <sstream>
 #include <typeinfo>
-#include <utility>
-#include <numeric>
 
 
 namespace ray_tracer {
