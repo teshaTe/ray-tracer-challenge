@@ -3,9 +3,25 @@
 
 namespace ray_tracer {
 
-Camera::Camera()
+Camera::Camera(const int h_size, const int v_size, const float fov): m_h_size(h_size),
+                                                                     m_v_size(v_size),
+                                                                     m_fov(m_mat_utils.toRadiance(fov))
 {
     m_view_transform.I();
+    float half_view = std::tan(m_fov / 2.0f);
+    m_aspect_ratio = static_cast<float>(m_h_size) / static_cast<float>(m_v_size);
+    if(m_aspect_ratio >= 1.0f)
+    {
+        m_half_width = half_view;
+        m_half_height = half_view / m_aspect_ratio;
+    }
+    else
+    {
+        m_half_width = half_view * m_aspect_ratio;
+        m_half_height = half_view;
+    }
+
+    m_pixel_size = 2 * m_half_width / m_h_size;
 }
 
 void Camera::compute_view_transform(const Vector<float> &from, const Vector<float> &to, const Vector<float> &up)
@@ -33,7 +49,5 @@ void Camera::compute_view_transform(const Vector<float> &from, const Vector<floa
     Matrix<float> translation_mat = m_mat_utils.translation_mat(-from[0], -from[1], -from[2]);
     m_view_transform = orientation.mul(translation_mat);
 }
-
-
 
 } // namespace ray_tracer
