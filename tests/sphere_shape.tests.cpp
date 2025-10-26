@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "Shapes/sphere.h"
+#include "Shapes/Sphere.h"
 #include "Core/Ray.hpp"
 #include "Core/DataTypes.hpp"
 #include "Core/Material.hpp"

@@ -3,10 +3,10 @@
 #include <gtest/gtest.h>
 
 #include "Containers/Vector.hpp"
-#include "RayTracer/Shapes/sphere.h"
+#include "RayTracer/Shapes/Sphere.h"
 #include "Core/Material.hpp"
 #include "Lights/point_light.h"
-#include "Core/worldscene.h"
+#include "Core/WorldScene.h"
 
 
 using namespace ray_tracer;
