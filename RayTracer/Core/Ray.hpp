@@ -2,7 +2,6 @@
 #define RAY_HPP
 
 #include "Containers/Vector.hpp"
-#include "MatrixUtils.hpp"
 
 namespace ray_tracer {
 
