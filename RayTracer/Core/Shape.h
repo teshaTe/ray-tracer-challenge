@@ -2,6 +2,7 @@
 #define SHAPE_H
 
 #include "Containers/Vector.hpp"
+#include "Containers/Matrix.hpp"
 #include "Core/DataTypes.hpp"
 #include "Core/Ray.hpp"
 #include "Core/Material.hpp"
