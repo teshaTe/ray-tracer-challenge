@@ -5,7 +5,7 @@
 #include "RayTracer/Core/Material.hpp"
 #include "RayTracer/Core/RayTracer.h"
 #include "RayTracer/Lights/point_light.h"
-#include "RayTracer/Shapes/sphere.h"
+#include "RayTracer/Shapes/Sphere.h"
 
 
 using namespace ray_tracer;
