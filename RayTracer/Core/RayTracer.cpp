@@ -88,39 +88,53 @@ Color<float> RayTracer::compute_shading(std::unique_ptr<shapes::Shape> shape,
 
 Color<float> RayTracer::get_color_at(WorldScene &world_scene, Ray &ray)
 {
-
-    // TODO: fisn the way how to detect if one object is inside the other
     auto &shapes = world_scene.get_shapes();
     auto &lights = world_scene.get_lights();
-
-    int obj_id_candidate = -1;
-    float hit_candidate = 1e+6;
-    std::vector<types::intersection> intersections_candidate;
-
-    for(auto &shape: shapes)
+    float closest_hit = std::numeric_limits<float>::max();
+    int closest_index = -1;
+    for(int i = 0; i < shapes.size(); i++)
     {
-        std::vector<types::intersection> intersections = shape.get()->intersect(ray);
+        std::vector<types::intersection> intersections = shapes[i]->intersect(ray);
         float hit = 0;
-        if(shape.get()->get_surface_hit(intersections, &hit)==true)
+        if(shapes[i]->get_surface_hit(intersections, &hit) && hit < closest_hit)
         {
-            if(hit < hit_candidate)
-            {
-                hit_candidate = hit;
-                intersections_candidate = intersections;
-                obj_id_candidate = shape->get_id();
-            }
+            closest_hit = hit;
+            closest_index = i;
         }
     }
-
     Color<float> shaded_pixel{0, 0, 0};
-
-    if(obj_id_candidate >= 0)
+    if(closest_index >= 0)
     {
-        types::intersection_state intersection_state = world_scene.precompute_intersection_state(*shapes[obj_id_candidate], intersections_candidate[0], ray);
-        shaded_pixel = compute_shading(shapes[obj_id_candidate]->clone(), lights, intersection_state);
+        types::intersection found_intersection;
+        found_intersection.obj_type = shapes[closest_index]->get_type();
+        found_intersection.obj_id = shapes[closest_index]->get_id();
+        found_intersection.t = closest_hit;
+        types::intersection_state intersection_state = world_scene.precompute_intersection_state(
+            *shapes[closest_index],
+            found_intersection,
+            ray);
+        shaded_pixel = compute_shading(shapes[closest_index]->clone(), lights, intersection_state);
     }
-
     return shaded_pixel;
+}
+
+Canvas<int> RayTracer::render(Camera &camera, WorldScene &world_scene)
+{
+    Canvas<int> canvas{camera.get_horizontal_size(), camera.get_vertical_size()};
+
+    if(world_scene.contains_shapes())
+    {
+        #pragma omp parallel for
+        for(int y=0; y < camera.get_vertical_size(); y++)
+            #pragma omp parallel for
+            for(int x=0; x < camera.get_horizontal_size(); x++)
+            {
+                Ray ray = canvas.shoot_ray_for_pixel(&camera, x, y);
+                Color<float> color = get_color_at(world_scene, ray);
+                canvas.set_pixel(x, y, color.to_int_rgb());
+            }
+    }
+    return canvas;
 }
 
 
