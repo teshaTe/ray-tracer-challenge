@@ -41,7 +41,7 @@ void WorldScene::delete_light(const int &id, const std::string light_type)
                                   ), m_lights.end());
 }
 
-std::vector<types::intersection> WorldScene::intersect(const Ray &ray)
+std::vector<types::intersection> WorldScene::intersect(Ray &ray)
 {
     std::vector<types::intersection> all_intersections;
     for(auto &obj : m_shapes)
@@ -87,10 +87,10 @@ void WorldScene::create_default_world()
     mat1.specular = 0.2;
     mat1.shininess = 200.0;
 
-    shapes::Sphere sp1{Vector<float>{0, 0, 0}, 1.0, 0};
+    shapes::Sphere sp1{1.0, 0};
     sp1.set_material(mat1);
 
-    shapes::Sphere sp2{Vector<float>{0.0, 0.0, 0.0}, 0.5, 1};
+    shapes::Sphere sp2{0.5, 1};
     materials::BaseMaterial mat2;
     sp2.set_material(mat2);
 
