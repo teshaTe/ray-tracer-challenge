@@ -4,6 +4,8 @@
 #include "Material.hpp"
 #include "Core/Light.hpp"
 #include "Core/Ray.hpp"
+#include "Core/Canvas.hpp"
+#include "Core/WorldScene.h"
 #include "Containers/Vector.hpp"
 #include "Containers/Color.hpp"
 #include "DataTypes.hpp"
@@ -34,6 +36,8 @@ public:
         types::intersection_state &intersection_state);
 
     Color<float> get_color_at(WorldScene &world_scene, Ray &ray);
+
+    Canvas<int> render(Camera &camera, WorldScene &world_scene);
 
     ~RayTracer() = default;
 };
