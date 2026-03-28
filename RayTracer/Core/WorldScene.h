@@ -43,7 +43,7 @@ public:
         m_camera = nullptr;
     }
 
-    std::vector<types::intersection> intersect(const Ray &ray);
+    std::vector<types::intersection> intersect(Ray &ray);
     types::intersection_state precompute_intersection_state(shapes::Shape &shape, types::intersection &intersection, Ray &ray);
 
     void create_default_world();
