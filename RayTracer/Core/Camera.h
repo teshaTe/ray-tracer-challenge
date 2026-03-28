@@ -3,7 +3,6 @@
 
 #include <memory>
 #include "Core/MatrixUtils.hpp"
-#include "Core/Ray.hpp"
 #include "Containers/Matrix.hpp"
 #include "Containers/Vector.hpp"
 
@@ -28,6 +27,8 @@ public:
     inline float get_aspect_ratio() const { return m_aspect_ratio; }
     inline int get_horizontal_size() const { return m_h_size; }
     inline int get_vertical_size() const { return m_v_size; }
+    inline float get_half_with() const {return m_half_width; }
+    inline float get_half_height() const { return m_half_height; }
 
     // set functions
     inline void set_view_transform(const Matrix<float> &view_transform) { m_view_transform = view_transform; }
