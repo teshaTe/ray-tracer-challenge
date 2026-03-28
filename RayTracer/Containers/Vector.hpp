@@ -292,10 +292,31 @@ public:
      * @param normal
      * @return
      */
-    Vector<float> reflect(const Vector<float> &normal)
+    Vector<T> reflect(const Vector<T> &normal)
     {
         Vector<float> in_vec{m_vec};
         return in_vec - normal * 2.0f * in_vec.dot(normal);
+    }
+
+    /**
+     * @brief hadamard_product
+     * @param other
+     * @return
+     */
+    Vector<T> hadamard_product(const Vector<T>& other)
+    {
+        Vector<T> vec = Vector<T>(m_vec[0]*other.m_vec[0],  m_vec[1]*other.m_vec[1], m_vec[2]*other.m_vec[2]);
+        return vec;
+    }
+
+    Vector<T> to_1x3() const
+    {
+        return Vector<T>{m_vec[0], m_vec[1], m_vec[2]};
+    }
+
+    Vector<T> to_1x4() const
+    {
+        return Vector<T>{m_vec[0], m_vec[1], m_vec[2], 1};
     }
 
     /**
