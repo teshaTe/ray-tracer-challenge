@@ -9,6 +9,7 @@
 #include "Core/DataTypes.hpp"
 #include "Core/Ray.hpp"
 #include "Core/Material.hpp"
+#include "Core/MatrixUtils.hpp"
 
 
 namespace ray_tracer::shapes {
@@ -23,9 +24,10 @@ private:
     float m_radius;
     int m_id;
     std::string m_type = "sphere";
+    MatrixUtlities m_mat_utils{};
 
 public:
-    Sphere(const Vector<float> &origin, const float radius, const int id);
+    Sphere(const float radius, const int id);
 
     /**
      * @brief get_radius
@@ -40,8 +42,7 @@ public:
      *        These methods override methods from the parent class.
      */
     // functions for changing/getting sphere transformation matrix/data
-    void transform(const Matrix<float> &transform) override;
-    void transform(const Vector<float> &tr_vec, const Matrix<float> &rot_mat) override;
+    void transform(Matrix<float> &transform) override;
 
     Matrix<float> get_transform() override { return m_transform_mat; }
     Matrix<float> get_rotation_matrix() override { return m_transform_mat.block(3, 3, 0, 0); }
@@ -63,7 +64,7 @@ public:
     ray_tracer::materials::BaseMaterial get_assigned_material() const override { return m_material; };
 
     // compute the intersection of the rays with the sphere
-    std::vector<types::intersection> intersect(const Ray &ray) override;
+    std::vector<types::intersection> intersect(Ray &ray) override;
 
     std::unique_ptr<shapes::Shape> clone() const override {
         return std::make_unique<Sphere>(*this); // Copy itself

@@ -4,50 +4,47 @@
 
 namespace ray_tracer::shapes {
 
-Sphere::Sphere(const Vector<float> &origin, const float radius, const int id): m_radius(radius),
-                                                                               m_origin(origin),
-                                                                               m_obj_name("sphere"),
-                                                                               m_id(id),
-                                                                               m_transform_mat{Matrix<float>{4, 4}}
+Sphere::Sphere(const float radius, const int id): m_radius(radius),
+                                                  m_obj_name("sphere"),
+                                                  m_id(id),
+                                                  m_transform_mat{Matrix<float>{4, 4}},
+                                                  m_origin(Vector<float>{0, 0, 0})
 {
     m_transform_mat.I();
-    m_transform_mat = m_transform_mat * m_radius;
+    // m_transform_mat = m_transform_mat.mul(m_mat_utils.scaling_mat(radius, radius, radius));
+    m_transform_mat = m_mat_utils.scaling_mat(radius, radius, radius).mul(m_transform_mat);
+    m_transform_mat(3, 3) = 1;
+
     m_material = ray_tracer::materials::BaseMaterial();
 }
 
-void Sphere::transform(const Matrix<float> &transform)
+void Sphere::transform(Matrix<float> &transform)
 {
-    m_transform_mat = transform;
-}
-
-void Sphere::transform(const Vector<float> &tr_vec, const Matrix<float> &rot_mat)
-{
-    for (int i = 0; i < 3; i++)
-    {
-        m_transform_mat(i, 3) = tr_vec[i];
-        for (int j = 0; j < 3; j++)
-            m_transform_mat(i, j) = rot_mat(i, j);
-    }
+    // m_transform_mat = m_transform_mat.mul(transform);
+    m_transform_mat = transform.mul(m_transform_mat);
+    m_origin = m_transform_mat.block(3, 1, 0, 3).to_vec_1x3();
 }
 
 Vector<float> Sphere::get_normal(const Vector<float> &point)
 {
-    Vector<float> obj_point = m_transform_mat.inv().mul(point).to_vec_1x3();
-    Vector<float> normal = obj_point - m_origin;
-    Vector<float> world_normal = m_transform_mat.inv().tr().mul(normal).to_vec_1x3();
+    // Matrix<float> inv_obj_tr = m_transform_mat.inv();
+    // Vector<float> obj_point = inv_obj_tr.mul(point).to_vec_1x3();
+    // Vector<float> normal = (obj_point - Vector<float>{0, 0, 0}).to_1x4();
+    // Vector<float> world_normal = inv_obj_tr.tr().mul(normal).to_vec_1x3();
 
+    // return world_normal.normalize();
+
+    Matrix<float> inv_obj_tr = m_transform_mat.inv();
+    Vector<float> obj_point = inv_obj_tr.mul(point).to_vec_1x3();
+    Vector<float> normal = Vector<float>{obj_point[0], obj_point[1], obj_point[2], 0};
+    Vector<float> world_normal = inv_obj_tr.tr().mul(normal).to_vec_1x3();
     return world_normal.normalize();
 }
 
 void Sphere::scale(const Vector<float> &scale_vec)
 {
-    MatrixUtlities mat_utils{};
-    Matrix<float> S = mat_utils.scaling_mat(scale_vec[0], scale_vec[1], scale_vec[2]);
-    m_transform_mat = m_transform_mat.mul(S);
-
-    m_origin = m_origin * scale_vec;
-    if (scale_vec[0] == scale_vec[1] == scale_vec[2])
-        m_radius = m_radius * scale_vec[0];
+    Matrix<float> S = m_mat_utils.scaling_mat(scale_vec[0], scale_vec[1], scale_vec[2]);
+    transform(S);
 }
 
 void Sphere::set_material(materials::BaseMaterial &material)
@@ -55,13 +52,11 @@ void Sphere::set_material(materials::BaseMaterial &material)
     m_material = material;
 }
 
-std::vector<types::intersection> Sphere::intersect(const Ray &ray)
+std::vector<types::intersection> Sphere::intersect(Ray &ray)
 {
-    Vector<float> tr_dir = m_transform_mat.inv().mul(ray.get_direction()).to_vec_1x3();
-    Vector<float> tr_origin = m_transform_mat.inv().mul(ray.get_origin()).to_vec_1x3();
-    Ray tr_ray{tr_origin, tr_dir};
+    Ray tr_ray = ray.transform(m_transform_mat);
 
-    Vector<float> sphere_to_ray_vec = tr_ray.get_origin() - m_origin;
+    Vector<float> sphere_to_ray_vec = tr_ray.get_origin() - Vector<float>{0, 0, 0};
     float a = tr_ray.get_direction().dot(tr_ray.get_direction());
     float b = 2.0f * tr_ray.get_direction().dot(sphere_to_ray_vec);
     float c = sphere_to_ray_vec.dot(sphere_to_ray_vec) - 1.0f;
@@ -93,6 +88,5 @@ std::vector<types::intersection> Sphere::intersect(const Ray &ray)
         return intersections_out;
     }
 }
-
 
 } // namespace ray_tracer::shapes
