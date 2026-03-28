@@ -22,7 +22,7 @@ TEST(WorldSceneCreationTest, TestingWorldScene)
 {
     lights::PointLight plight{Vector<float>(-10, 10, -10), Color<float>{1, 1, 1}, 0};
 
-    shapes::Sphere sp1{Vector<float>{0, 0, 0}, 1.0, 0};
+    shapes::Sphere sp1{1.0, 0};
     materials::BaseMaterial mat1;
     mat1.ambient = 0.1;
     mat1.color = Color<float>{0.8, 1.0, 0.6};
@@ -31,7 +31,7 @@ TEST(WorldSceneCreationTest, TestingWorldScene)
     mat1.specular = 0.2;
     sp1.set_material(mat1);
 
-    shapes::Sphere sp2{Vector<float>{0.5, 0, 0.5}, 1.0, 1};
+    shapes::Sphere sp2{1.0, 1};
     sp2.scale(Vector<float>{0.5, 0.5, 0.5});
 
     WorldScene world_scene{};
@@ -49,7 +49,7 @@ TEST(WorldSceneCreationTest, TestingWorldScene)
 
 TEST(WorldSceneIntersectionTest, TestingWOrldSceneIntersection)
 {
-    shapes::Sphere sp1{Vector<float>{0, 0, 0}, 1.0, 0};
+    shapes::Sphere sp1{1.0, 0};
     materials::BaseMaterial mat1;
     mat1.ambient = 0.1;
     mat1.color = Color<float>{0.8, 1.0, 0.6};
@@ -58,7 +58,7 @@ TEST(WorldSceneIntersectionTest, TestingWOrldSceneIntersection)
     mat1.specular = 0.2;
     sp1.set_material(mat1);
 
-    shapes::Sphere sp2{Vector<float>{0, 0, 0}, 1.0, 1};
+    shapes::Sphere sp2{1.0, 1};
     sp2.scale(Vector<float>{0.5, 0.5, 0.5});
 
     WorldScene world_scene{};
@@ -78,7 +78,7 @@ TEST(WorldSceneIntersectionTest, TestingWOrldSceneIntersection)
 TEST(WorldScenePrecompIntersectionStateTest, TestingWorldSceneIntersectionStatePrecomp)
 {
     Ray ray1{Vector<float>{0, 0, -5}, Vector<float>{0, 0, 1}};
-    shapes::Sphere sp{Vector<float>{0, 0, 0}, 1.0, 0};
+    shapes::Sphere sp{1.0, 0};
     types::intersection intersection1;
     intersection1.obj_type = sp.get_type();
     intersection1.t = 4;

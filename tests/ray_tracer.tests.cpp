@@ -6,6 +6,8 @@
 #include "Core/Material.hpp"
 #include "Core/RayTracer.h"
 #include "Core/WorldScene.h"
+#include "Core/Camera.h"
+#include "Core/Canvas.hpp"
 #include "Lights/point_light.h"
 #include "Shapes/Sphere.h"
 
@@ -112,7 +114,7 @@ TEST(RayTracerWorldSceneShadingInsideTest, TestingWorldSceneShadingInside)
     ASSERT_EQ(shading_color, ref_color);
 }
 
-TEST(RayTracerWorldSceneRenderingEdgeCases,TestingWorldSceneRenderingEdgeCases)
+TEST(RayTracerWorldSceneRenderingEdgeCasesTest, TestingWorldSceneRenderingEdgeCases)
 {
     // test no object got intersected
     WorldScene world_scene1{};
@@ -124,7 +126,7 @@ TEST(RayTracerWorldSceneRenderingEdgeCases,TestingWorldSceneRenderingEdgeCases)
     Color<float> ref_color1{0.0, 0.0, 0.0};
     ASSERT_EQ(shading_color1, ref_color1);
 
-    // test on;y exterior object got as hit
+    // test only exterior object got as hit
     Ray ray2{Vector<float>{0, 0, -5}, Vector<float>{0, 0, 1}};
     Color<float> shading_color2 = ray_tracer.get_color_at(world_scene1, ray2);
 
@@ -134,16 +136,12 @@ TEST(RayTracerWorldSceneRenderingEdgeCases,TestingWorldSceneRenderingEdgeCases)
     //  test only interior object got a hit
     WorldScene world_scene2{};
     materials::BaseMaterial mat1;
-    mat1.color = Color<float>{0.8, 1.0, 0.6};
     mat1.ambient = 1.0;
-    mat1.diffuse = 0.7;
-    mat1.specular = 0.2;
-    mat1.shininess = 200.0;
 
-    shapes::Sphere sp1{Vector<float>{0.0, 0.0, 0.0}, 1.0, 0};
+    shapes::Sphere sp1{1.0, 0};
     sp1.set_material(mat1);
 
-    shapes::Sphere sp2{Vector<float>{0.0, 0.0, 0.0}, 0.5, 1};
+    shapes::Sphere sp2{0.5, 1};
     materials::BaseMaterial mat2;
     mat2.ambient = 1.0;
     sp2.set_material(mat2);
@@ -161,6 +159,23 @@ TEST(RayTracerWorldSceneRenderingEdgeCases,TestingWorldSceneRenderingEdgeCases)
     ASSERT_EQ(shading_color3, ref_color3);
 }
 
+TEST(RenderingWorldWithCameraTest, TestingWorldRenderingWithCamera)
+{
+    WorldScene world_scene{};
+    world_scene.create_default_world();
+
+    Camera camera{11, 11, 90};
+    Vector<float> from{0, 0, -5};
+    Vector<float> to{0, 0, 0};
+    Vector<float> up{0, 1, 0};
+    camera.compute_view_transform(from, to, up);
+
+    RayTracer ray_tracer{};
+    Canvas canvas = ray_tracer.render(camera, world_scene);
+    Color<float> ref_pixel{0.38066, 0.47583, 0.2855};
+
+    ASSERT_EQ(canvas.get_pixel(5, 5), ref_pixel.to_int_rgb());
+}
 
 int main(int argc, char *argv[])
 {

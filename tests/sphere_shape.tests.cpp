@@ -13,17 +13,15 @@ using namespace ray_tracer;
 
 TEST(CreatingSphereTest, TestingSphereCreation)
 {
-    Vector<float> origin1{0, 0, 0};
-    shapes::Sphere sphere1{origin1, 1.0, 1};
+    shapes::Sphere sphere1{1.0, 1};
 
     ASSERT_FLOAT_EQ(sphere1.get_radius(), 1.0);
-    ASSERT_EQ(sphere1.get_origin(), origin1);
     ASSERT_EQ(sphere1.get_id(), 1);
 }
 
 TEST(SphereRayIntersectionTest, TestingRayIntersection)
 {
-    shapes::Sphere sphere1{Vector<float>{0, 0, 0}, 1.0, 1};
+    shapes::Sphere sphere1{1.0, 1};
     Ray ray1{Vector<float>{0, 0, -5}, Vector<float>{0, 0, 1}};
     std::vector<types::intersection> intersections1 = sphere1.intersect(ray1);
 
@@ -56,13 +54,12 @@ TEST(SphereRayIntersectionTest, TestingRayIntersection)
 
     Ray ray5{Vector<float>{0, 2, -5}, Vector<float>{0, 0, 1}};
     std::vector<types::intersection> intersections5 = sphere1.intersect(ray5);
-
     ASSERT_EQ(intersections5.size(), 0);
 }
 
 TEST(ObjectHitCheckTest, TestingRayHit)
 {
-    shapes::Sphere sphere1{Vector<float>{0, 0, 0}, 1.0, 1};
+    shapes::Sphere sphere1{1.0, 1};
     std::vector<types::intersection> intersections1(2);
     intersections1[0].t = 1;
     intersections1[1].t = 2;
@@ -105,56 +102,49 @@ TEST(ObjectHitCheckTest, TestingRayHit)
 
 TEST(SphereTransformmTest, TestingSphereTransform)
 {
-    shapes::Sphere sphere1{Vector<float>{0, 0, 0}, 1.0, 1};
-    Matrix<float> R1{3, 3};
-    R1.I();
-    Vector<float> T1{2, 3, 4};
+    shapes::Sphere sphere1{1.0, 1};
+    MatrixUtlities mat_utils{};
+    Matrix<float> tr = mat_utils.translation_mat(2, 3, 4);
+    sphere1.transform(tr);
 
     std::vector<std::vector<float>> tr1{{1, 0, 0, 2}, {0, 1, 0, 3}, {0, 0, 1, 4}, {0, 0, 0, 1}};
     Matrix<float> transform_ref{4, 4, tr1};
-    sphere1.transform(T1, R1);
-    ASSERT_EQ(sphere1.get_translation(), T1);
-    ASSERT_EQ(sphere1.get_rotation_matrix(), R1);
     ASSERT_EQ(sphere1.get_transform(), transform_ref);
 }
+
 
 TEST(SphereScaledRayIntersectionTest, TestingScaledSphereRayIntersection)
 {
     Ray ray{Vector<float>{0, 0, -5}, Vector<float>{0, 0, 1}};
-    shapes::Sphere sphere(Vector<float>{0, 0, 0}, 1.0, 1);
+    shapes::Sphere sphere{1.0, 1};
     sphere.scale(Vector<float>{2, 2, 2});
 
     std::vector<types::intersection> intersections = sphere.intersect(ray);
+
+    std::cout << intersections[0].t << std::endl;
+    std::cout << intersections[1].t << std::endl;
 
     ASSERT_EQ(intersections.size(), 2);
     ASSERT_EQ(intersections[0].t, 3);
     ASSERT_EQ(intersections[1].t, 7);
 }
 
+
 TEST(SphereTranslatedRayIntersectionTest, TestingTranslatedSphereRayIntersection)
 {
+    shapes::Sphere sphere(1.0, 1);
+    MatrixUtlities mat_utils{};
+    Matrix<float> tr = mat_utils.translation_mat(5, 0, 0);
+    sphere.transform(tr);
     Ray ray{Vector<float>{0, 0, -5}, Vector<float>{0, 0, 1}};
-    shapes::Sphere sphere(Vector<float>{0, 0, 0}, 1.0, 1);
-    Matrix<float> R1{3, 3};
-    R1.I();
-    Vector<float> T1{5, 0, 0};
-
-    sphere.transform(T1, R1);
-
-    Matrix<float> ray_tr_mat = sphere.get_transform().inv();
-    Vector<float> ray_orig = ray_tr_mat.mul(ray.get_origin()).to_vec_1x3();
-    Vector<float> ray_dir = ray_tr_mat.mul(ray.get_direction()).to_vec_1x3();
-
-    Ray new_ray{ray_orig, ray_dir};
-
-    std::vector<types::intersection> intersections = sphere.intersect(new_ray);
+    std::vector<types::intersection> intersections = sphere.intersect(ray);
 
     ASSERT_EQ(intersections.size(), 0);
 }
 
 TEST(SphereNormalComputationTest, TestingNormalComputation)
 {
-    shapes::Sphere sphere1(Vector<float>{0, 0, 0}, 1.0, 1);
+    shapes::Sphere sphere1(1.0, 1);
     Vector<float> n1 = sphere1.get_normal(Vector<float>{1, 0, 0});
     Vector<float> n1_ref{1, 0, 0};
     ASSERT_EQ(n1, n1_ref);
@@ -169,24 +159,20 @@ TEST(SphereNormalComputationTest, TestingNormalComputation)
 
     float val1 = std::sqrt(3.0)/3.0;
     Vector<float> n4 = sphere1.get_normal(Vector<float>{val1, val1, val1});
-
     float magn1 = n4.magnitude();
     ASSERT_FLOAT_EQ(magn1, 1.0);
 
-    std::vector<std::vector<float>> tr1{{1, 0, 0, 0}, {0, 1, 0, 1}, {0, 0, 1, 0}, {0, 0, 0, 1}};
-    Matrix<float> tr1_mat{4, 4, tr1};
-    sphere1.transform(tr1_mat);
+    MatrixUtlities mat_utils{};
+    Matrix<float> tr = mat_utils.translation_mat(0, 0, 0);
+    sphere1.transform(tr);
     Vector<float> n5 = sphere1.get_normal(Vector<float>{0, 1.70711, -0.70711});
     Vector<float> n5_ref{0, 0.923879, -0.382684};
     ASSERT_EQ(n5, n5_ref);
 
-    shapes::Sphere sphere2(Vector<float>{0, 0, 0}, 1.0, 2);
+    shapes::Sphere sphere2(1.0, 2);
     sphere2.scale(Vector<float>{1, 0.5, 1});
-
-    MatrixUtlities mat_utils{};
     Matrix<float> R = mat_utils.rotation_mat_ZAxis(M_PI/5.0);
-
-    sphere2.transform(Vector<float>{0, 0, 0}, R);
+    sphere2.transform(R);
     float val2 = std::sqrt(2.0)/2.0;
     Vector<float> n6 = sphere2.get_normal(Vector<float>{0, val2, -val2});
     Vector<float> n6_ref = Vector<float>{0, 0.97014, -0.24254};
@@ -202,7 +188,7 @@ TEST(SphereMaterialAssignmentTest, TestingMaterialAssignment)
     mat1.specular = 0.9;
     mat1.shininess = 200.0;
 
-    shapes::Sphere sphere1(Vector<float>{0, 0, 0}, 1.0, 1);
+    shapes::Sphere sphere1(1.0, 1);
     sphere1.set_material(mat1);
 
     materials::BaseMaterial mat_test = sphere1.get_assigned_material();

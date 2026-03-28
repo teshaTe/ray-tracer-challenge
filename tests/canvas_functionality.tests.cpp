@@ -1,5 +1,8 @@
 #include <gtest/gtest.h>
 #include "Core/Canvas.hpp"
+#include "Core/Camera.h"
+#include "Core/Ray.hpp"
+#include "Core/MatrixUtils.hpp"
 #include <iostream>
 
 using namespace ray_tracer;
@@ -45,6 +48,38 @@ TEST(SavingCanvasTest, TestingCanvasSavingToFile)
     canvas_dst = canvas.load_ppm(file_name, path);
 
     ASSERT_EQ(canvas, canvas_dst);
+}
+
+TEST(ConstructingRayThroughCanvasTest, TestingRayConstructionThroughCanvas)
+{
+    Canvas<int> canvas{201, 101};
+    Camera camera{201, 101, 90};
+
+    Ray ray1 = canvas.shoot_ray_for_pixel(&camera, 100, 50);
+    Vector<float> ref_origin1{0, 0, 0};
+    Vector<float> ref_dir1{0, 0, -1};
+
+    ASSERT_EQ(ray1.get_origin(), ref_origin1);
+    ASSERT_EQ(ray1.get_direction(), ref_dir1);
+
+    Ray ray2 = canvas.shoot_ray_for_pixel(&camera, 0, 0);
+    Vector<float> ref_origin2{0, 0, 0};
+    Vector<float> ref_dir2{0.66519, 0.33259, -0.66851};
+
+    ASSERT_EQ(ray2.get_origin(), ref_origin2);
+    ASSERT_EQ(ray2.get_direction(), ref_dir2);
+
+    MatrixUtlities mat_utils{};
+    Matrix<float> cam_view_tr = mat_utils.rotation_mat_YAxis(mat_utils.toRadiance(45.0)).mul(mat_utils.translation_mat(0, -2, 5));
+    camera.set_view_transform(cam_view_tr);
+    Ray ray3 = canvas.shoot_ray_for_pixel(&camera, 100, 50);
+
+    Vector<float> ref_origin3{0, 2, -5};
+    float v1 = std::sqrt(2) / 2.0f;
+    Vector<float> ref_dir3{v1, 0, -v1};
+
+    ASSERT_EQ(ray3.get_origin(), ref_origin3);
+    ASSERT_EQ(ray3.get_direction(), ref_dir3);
 }
 
 
