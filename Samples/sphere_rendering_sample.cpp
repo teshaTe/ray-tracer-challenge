@@ -13,8 +13,11 @@ using namespace ray_tracer;
 
 int main(int argc, char *argv[])
 {
-    shapes::Sphere sphere{Vector<float>{0, 0, 0}, 1.0, 0};
-    sphere.scale(Vector<float>{0.5, 0.5, 0.5});
+    shapes::Sphere sphere{1.0, 0};
+
+    MatrixUtlities mat_utils{};
+    Matrix<float> tr = mat_utils.translation_mat(0, 0, 10);
+    sphere.transform(tr);
 
     materials::BaseMaterial mat;
     mat.color = Color<float>{1., 0.2, 1.};
@@ -63,7 +66,7 @@ int main(int argc, char *argv[])
     }
 
     std::string file_name = "sphere_image";
-    std::string path = "/home/tesha/Documents/C++/ray-tracer-challenge/build";
+    std::string path = "../";
 
     image.save_to_ppm(file_name, path);
     return 0;
