@@ -1,6 +1,7 @@
 #include "Containers/Vector.hpp"
 #include "Containers/Color.hpp"
 #include "RayTracer/Core/Canvas.hpp"
+#include "RayTracer/Lights/point_light.h"
 #include "RayTracer/Core/Ray.hpp"
 #include "RayTracer/Core/Material.hpp"
 #include "RayTracer/Core/RayTracer.h"

@@ -37,10 +37,6 @@ public:
 
     Ray transform(Matrix<float> transform_mat)
     {
-        // Matrix<float> transform_inv = transform_mat.inv();
-        // Vector<float> origin_tr = transform_inv.mul(m_origin).to_vec_1x3();
-        // return Ray(origin_tr, m_direction);
-
         Matrix<float> transform_inv = transform_mat.inv();
         Vector<float> origin_tr = transform_inv.mul(m_origin).to_vec_1x3();
         Vector<float> direction_tr = transform_inv.mul(Vector<float>{m_direction[0], m_direction[1], m_direction[2], 0}).to_vec_1x3();
