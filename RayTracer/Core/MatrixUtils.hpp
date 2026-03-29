@@ -80,12 +80,12 @@ public:
 
     float toRadiance(const float angle)
     {
-        return (angle/180.0f) * M_PI;
+        return (angle * M_PI / 180.0f);
     }
 
     float toDegrees(const float angle)
     {
-        return (angle/M_PI) * 180.0f;
+        return (angle * 180.0f / M_PI);
     }
 
     ~MatrixUtlities() = default;

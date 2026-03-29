@@ -1,11 +1,15 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
+#include <memory>
+#include <string>
+
 #include "Containers/Vector.hpp"
-#include "Core/shape.h"
+#include "Core/Shape.h"
 #include "Core/DataTypes.hpp"
 #include "Core/Ray.hpp"
 #include "Core/Material.hpp"
+#include "Core/MatrixUtils.hpp"
 
 
 namespace ray_tracer::shapes {
@@ -19,9 +23,11 @@ private:
     std::string m_obj_name;
     float m_radius;
     int m_id;
+    std::string m_type = "sphere";
+    MatrixUtlities m_mat_utils{};
 
 public:
-    Sphere(const Vector<float> &origin, const float radius, const int id);
+    Sphere(const float radius, const int id);
 
     /**
      * @brief get_radius
@@ -29,13 +35,14 @@ public:
      */
     float get_radius() const { return m_radius; }
 
+    std::string get_type() const override { return m_type; }
+
     /**
      * @brief The descritption for functions below can be found in shape.h file.
      *        These methods override methods from the parent class.
      */
     // functions for changing/getting sphere transformation matrix/data
-    void transform(const Matrix<float> &transform) override;
-    void transform(const Vector<float> &tr_vec, const Matrix<float> &rot_mat) override;
+    void transform(Matrix<float> &transform) override;
 
     Matrix<float> get_transform() override { return m_transform_mat; }
     Matrix<float> get_rotation_matrix() override { return m_transform_mat.block(3, 3, 0, 0); }
@@ -53,14 +60,15 @@ public:
     // returns the id of the object
     int get_id() const override { return m_id; }
 
-    // returns the name of the created sphere
-    std::string get_name() const override { return m_obj_name; }
-
     void set_material(ray_tracer::materials::BaseMaterial &material) override;
     ray_tracer::materials::BaseMaterial get_assigned_material() const override { return m_material; };
 
     // compute the intersection of the rays with the sphere
-    std::vector<types::intersection> intersect(const Ray &ray) const override;
+    std::vector<types::intersection> intersect(Ray &ray) override;
+
+    std::unique_ptr<shapes::Shape> clone() const override {
+        return std::make_unique<Sphere>(*this); // Copy itself
+    }
 
     ~Sphere() = default;
 };

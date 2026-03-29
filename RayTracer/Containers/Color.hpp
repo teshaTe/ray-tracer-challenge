@@ -141,13 +141,13 @@ public:
 
     Color<int> to_int_rgb()
     {
-        Color<int> color = Color<int>(m_color[0]*255, m_color[1]*255, m_color[2]*255);
+        Color<int> color = Color<int>(std::ceil(m_color[0]*255), std::ceil(m_color[1]*255), std::ceil(m_color[2]*255));
         return color;
     }
 
-    Color<T> to_float_rgb()
+    Color<float> to_float_rgb()
     {
-        Color<T> color = Color<T>(m_color[0] / 255, m_color[1] / 255, m_color[2] / 255);
+        Color<float> color = Color<float>(m_color[0] / 255.0f, m_color[1] / 255.0f, m_color[2] / 255.0f);
         return color;
     }
 

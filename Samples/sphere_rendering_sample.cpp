@@ -1,11 +1,12 @@
 #include "Containers/Vector.hpp"
 #include "Containers/Color.hpp"
 #include "RayTracer/Core/Canvas.hpp"
+#include "RayTracer/Lights/point_light.h"
 #include "RayTracer/Core/Ray.hpp"
 #include "RayTracer/Core/Material.hpp"
 #include "RayTracer/Core/RayTracer.h"
 #include "RayTracer/Lights/point_light.h"
-#include "RayTracer/Shapes/sphere.h"
+#include "RayTracer/Shapes/Sphere.h"
 
 
 using namespace ray_tracer;
@@ -13,22 +14,26 @@ using namespace ray_tracer;
 
 int main(int argc, char *argv[])
 {
-    shapes::Sphere sphere{Vector<float>{0, 0, 0}, 1.0, 0};
+    shapes::Sphere sphere{1.0, 0};
+
+    MatrixUtlities mat_utils{};
+    Matrix<float> tr = mat_utils.translation_mat(0, 0, 10);
+    sphere.transform(tr);
+
     materials::BaseMaterial mat;
     mat.color = Color<float>{1., 0.2, 1.};
     mat.ambient = 0.1;
     mat.diffuse = 0.9;
-    mat.snininess = 200.0;
+    mat.shininess = 200.0;
     mat.specular = 0.9;
     sphere.set_material(mat);
 
-    lights::PointLight plight{Vector<float>{-10, 10, -10}, Color<float>{1, 1, 1}};
+    lights::PointLight plight{Vector<float>{-10, 10, -10}, Color<float>{1, 1, 1}, 0};
     RayTracer ray_tracer;
 
     Vector<float> rays_origin{0, 0, -5};
 
-    int canvas_size = 512;
-
+    int canvas_size = 1024;
     Canvas<int> image{canvas_size, canvas_size};
 
     float wall_size = 7.0;
@@ -50,7 +55,7 @@ int main(int argc, char *argv[])
 
             if(intersections.size() > 0)
             {
-                Vector<float> point = ray.position(ray, intersections[0].t);
+                Vector<float> point = ray.position(intersections[0].t);
                 Vector<float> normal = sphere.get_normal(point);
                 Vector<float> eye = ray.get_direction().negate();
                 materials::BaseMaterial sp_mat = sphere.get_assigned_material();
@@ -62,7 +67,7 @@ int main(int argc, char *argv[])
     }
 
     std::string file_name = "sphere_image";
-    std::string path = "/home/tesha/Documents/C++/ray-tracer-challenge/Build";
+    std::string path = "../";
 
     image.save_to_ppm(file_name, path);
     return 0;

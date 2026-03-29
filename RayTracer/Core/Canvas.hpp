@@ -1,14 +1,16 @@
 #ifndef RENDERINGCANVAS_HPP
 #define RENDERINGCANVAS_HPP
 
-#include "Containers/Color.hpp"
 #include <vector>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <typeinfo>
-#include <utility>
-#include <numeric>
+
+#include "Containers/Color.hpp"
+#include "Core/MatrixUtils.hpp"
+#include "Core/Camera.h"
+#include "Core/Ray.hpp"
 
 
 namespace ray_tracer {
@@ -22,8 +24,10 @@ private:
     int m_width;
     int m_height;
     T m_max_col_val;
+    MatrixUtlities m_mat_utils;
 
 public:
+    // Constructors & destructor
     Canvas(const int image_width, const int image_height) : m_width(image_width), m_height(image_height)
     {
         m_canvas.resize(m_width*m_height);
@@ -43,6 +47,9 @@ public:
         this->m_max_col_val = other.m_max_col_val;
     }
 
+    ~Canvas() = default;
+
+    // overloaded/defined operators
     Color<T>& operator[](int i) { return m_canvas[i]; }
 
     bool operator==(const Canvas<T>& other) const
@@ -73,6 +80,7 @@ public:
             return false;
     }
 
+    // functions for dealing with canvas
     T clip(T val)
     {
         if(val < 0)
@@ -90,24 +98,34 @@ public:
         m_height = image_height;
     }
 
-    void set_pixel(const int x, const int y, Color<T> val)
+    Ray shoot_ray_for_pixel(const Camera *camera, const int pix_x, const int pix_y)
     {
-        if((x >= 0 && x < m_width) && (y>=0 && y < m_height))
-            m_canvas[x+y*m_width] = Color<T>{clip(val.r()), clip(val.g()), clip(val.b())};
-        else
-            throw std::out_of_range("Either x or y coordinate is out of range!");
+        // the offset from the edge of the canvas to the pixels's center
+        float x_offset = (pix_x + 0.5f) * camera->get_pixel_size();
+        float y_offset = (pix_y + 0.5f) * camera->get_pixel_size();
+
+        // the untransformed coordinates of the pixel in world space
+        float world_x = camera->get_half_with() - x_offset;
+        float world_y = camera->get_half_height() - y_offset;
+
+        // using the camera matrix, transform the canvas point and the origin;
+        // compute the ray's direction vector.
+        Matrix<float> inv_camera_view_tr = camera->get_view_transform().inv();
+        Vector<float> pixel = inv_camera_view_tr.mul(Vector<float>{world_x, world_y, -1, 1}).to_vec_1x3();
+        Vector<float> origin = inv_camera_view_tr.mul(Vector<float>{0, 0, 0, 1}).to_vec_1x3();
+        Vector<float> direction = (pixel - origin).normalize();
+        Ray ray{origin, direction};
+
+        return ray;
     }
 
-    Color<T> get_pixel(const int x, const int y)
-    {
-        return m_canvas[x + y*m_width];
-    }
-
+    // IO output
     void save_to_ppm(std::string& file_name, std::string& output_path)
     {
         try
         {
-            std::string out_path = output_path + "\\" + file_name + ".ppm";
+            std::string out_path = output_path + "/" + file_name + ".ppm";
+            std::cout << "Saving file: " << out_path << std::endl;
             std::ofstream file;
             file.open(out_path);
             file.exceptions(std::ifstream::eofbit | std::ifstream::failbit | std::ifstream::badbit);
@@ -202,11 +220,24 @@ public:
         return vRetValue;
     }
 
+    // get functions
     int get_canvas_width() const { return m_width; }
     int get_canvas_height() const { return m_height; }
     size_t get_canvas_container_size() const { return m_canvas.size(); }
+    Color<T> get_pixel(const int x, const int y)
+    {
+        return m_canvas[x + y*m_width];
+    }
 
-    ~Canvas() = default;
+
+    // set functions
+    void set_pixel(const int x, const int y, Color<T> val)
+    {
+        if((x >= 0 && x < m_width) && (y>=0 && y < m_height))
+            m_canvas[x+y*m_width] = Color<T>{clip(val.r()), clip(val.g()), clip(val.b())};
+        else
+            throw std::out_of_range("Either x or y coordinate is out of range!");
+    }
 };
 
 } // namespace ray_tracer
