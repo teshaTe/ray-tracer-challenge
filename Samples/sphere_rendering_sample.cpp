@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
                 Vector<float> normal = sphere.get_normal(point);
                 Vector<float> eye = ray.get_direction().negate();
                 materials::BaseMaterial sp_mat = sphere.get_assigned_material();
-                Color<float> color = ray_tracer.compute_lightning(sp_mat, plight, point, eye, normal);
+                Color<float> color = ray_tracer.compute_lightning(sp_mat, plight, point, eye, normal, false);
 
                 image.set_pixel(x, y, color.to_int_rgb());
             }

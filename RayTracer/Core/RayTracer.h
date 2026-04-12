@@ -28,12 +28,16 @@ public:
                                    lights::Light &light,
                                    Vector<float> &point,
                                    Vector<float> &eye_dir,
-                                   Vector<float> &normal);
+                                   Vector<float> &normal,
+                                   const bool &in_shadow);
+
+    const bool is_shadowed(lights::Light &light, WorldScene &world, Vector<float> &point);
 
     Color<float> compute_shading(
         std::unique_ptr<shapes::Shape> shape,
         std::vector<std::unique_ptr<lights::Light> > &lights,
-        types::intersection_state &intersection_state);
+        types::intersection_state &intersection_state,
+        WorldScene &world_scene);
 
     Color<float> get_color_at(WorldScene &world_scene, Ray &ray);
 

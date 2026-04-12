@@ -66,10 +66,13 @@ types::intersection_state WorldScene::precompute_intersection_state(shapes::Shap
         normal = normal.negate();
     }
 
+    Vector<float> over_point = point + normal * 1e-3;
+
     types::intersection_state state{
         intersection.obj_type,
         intersection.obj_id,
         point,
+        over_point,
         eye_dir,
         normal,
         intersection.t,
