@@ -26,6 +26,7 @@ struct intersection_state
     std::string obj_type;
     int obj_id;
     Vector<float> point;
+    Vector<float> over_point;
     Vector<float> eye_dir;
     Vector<float> normal;
     float t;
