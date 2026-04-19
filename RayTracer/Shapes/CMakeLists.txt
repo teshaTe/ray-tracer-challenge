@@ -3,9 +3,13 @@ project(RayTracer-shapes LANGUAGES CXX)
 
 ####################### ESSENTIAL INCLUDES/PROJECT FILES ##########################
 
-set(SHAPES_SRC  Sphere.cpp)
+set(SHAPES_SRC  Sphere.cpp
+                Plane.cpp
+    )
 
-set(SHAPES_HEADERS  Sphere.h)
+set(SHAPES_HEADERS  Sphere.h
+                    Plane.h
+    )
 
 ############################ CREATING EXECUTABLES TO RUN ##########################
 

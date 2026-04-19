@@ -12,7 +12,6 @@ FetchContent_MakeAvailable(googletest)
 add_library(GTest::GTest INTERFACE IMPORTED)
 target_link_libraries(GTest::GTest INTERFACE gtest_main)
 
-
 add_executable(vector_test vector_container.tests.cpp)
 target_include_directories(vector_test PUBLIC "${PROJECT_ROOT_DIR}/Containers")
 target_link_libraries(vector_test PRIVATE GTest::GTest)
@@ -47,6 +46,11 @@ add_executable(sphere_prim_test sphere_shape.tests.cpp)
 target_include_directories(sphere_prim_test PUBLIC "${PROJECT_ROOT_DIR}/RayTracer" "${PROJECT_ROOT_DIR}")
 target_link_libraries(sphere_prim_test PRIVATE GTest::GTest shapes_lib)
 add_test(sphere_prim_gtest sphere_prim_test)
+
+add_executable(plane_prim_test plane_shape.tests.cpp)
+target_include_directories(plane_prim_test PUBLIC "${PROJECT_ROOT_DIR}/RayTracer" "${PROJECT_ROOT_DIR}")
+target_link_libraries(plane_prim_test PRIVATE GTest::GTest shapes_lib)
+add_test(plane_prim_gtest plane_prim_test)
 
 add_executable(ray_tracer_test ray_tracer.tests.cpp)
 target_include_directories(ray_tracer_test PUBLIC "${PROJECT_ROOT_DIR}/RayTracer" "${PROJECT_ROOT_DIR}")

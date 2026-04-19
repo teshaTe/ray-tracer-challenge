@@ -1,12 +1,12 @@
 #include "Containers/Vector.hpp"
 #include "Containers/Color.hpp"
 #include "RayTracer/Core/Canvas.hpp"
-#include "RayTracer/Core/Ray.hpp"
 #include "RayTracer/Core/Material.hpp"
 #include "RayTracer/Core/RayTracer.h"
 #include "RayTracer/Core/MatrixUtils.hpp"
 #include "RayTracer/Lights/point_light.h"
 #include "RayTracer/Shapes/Sphere.h"
+#include "RayTracer/Shapes/Plane.h"
 
 
 using namespace ray_tracer;
@@ -15,9 +15,7 @@ using namespace ray_tracer;
 int main(int argc, char *argv[])
 {
     // creating scene floor
-    shapes::Sphere floor{1.0, 0};
-    floor.scale(Vector<float>{10, 0.01, 10});
-
+    shapes::Plane floor{0};
     materials::BaseMaterial floor_mat;
     floor_mat.color = Color<float>{1., 0.9, 0.9};
     floor_mat.specular = 0.0;
@@ -25,22 +23,19 @@ int main(int argc, char *argv[])
 
     // creating left wall
     MatrixUtlities mat_utils{};
-
-    shapes::Sphere left_wall{1.0, 1};
+    shapes::Plane left_wall{1};
     Matrix<float> left_wall_tr = mat_utils.translation_mat(0, 0, 5).
                                  mul(mat_utils.rotation_mat_YAxis(mat_utils.toRadiance(-45.0))).
-                                 mul(mat_utils.rotation_mat_XAxis(mat_utils.toRadiance(90))).
-                                 mul(mat_utils.scaling_mat(10, 0.01, 10));
+                                 mul(mat_utils.rotation_mat_XAxis(mat_utils.toRadiance(90)));
 
     left_wall.transform(left_wall_tr);
     left_wall.set_material(floor_mat);
 
     // creating right wall
-    shapes::Sphere right_wall{1.0, 2};
+    shapes::Plane right_wall{2};
     Matrix<float> right_wall_tr = mat_utils.translation_mat(0, 0, 5).
                                   mul(mat_utils.rotation_mat_YAxis(mat_utils.toRadiance(45.0))).
-                                  mul(mat_utils.rotation_mat_XAxis(mat_utils.toRadiance(90))).
-                                  mul(mat_utils.scaling_mat(10, 0.01, 10));
+                                  mul(mat_utils.rotation_mat_XAxis(mat_utils.toRadiance(90)));
 
     right_wall.transform(right_wall_tr);
     right_wall.set_material(floor_mat);
