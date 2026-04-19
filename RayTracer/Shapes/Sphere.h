@@ -26,16 +26,11 @@ private:
     std::string m_type = "sphere";
     MatrixUtlities m_mat_utils{};
 
+private:
+    std::vector<types::intersection> m_local_intersect(Ray &ray);
+
 public:
     Sphere(const float radius, const int id);
-
-    /**
-     * @brief get_radius
-     * @return
-     */
-    float get_radius() const { return m_radius; }
-
-    std::string get_type() const override { return m_type; }
 
     /**
      * @brief The descritption for functions below can be found in shape.h file.
@@ -44,21 +39,17 @@ public:
     // functions for changing/getting sphere transformation matrix/data
     void transform(Matrix<float> &transform) override;
 
+    float get_radius() const { return m_radius; }
+    std::string get_type() const override { return m_type; }
     Matrix<float> get_transform() override { return m_transform_mat; }
     Matrix<float> get_rotation_matrix() override { return m_transform_mat.block(3, 3, 0, 0); }
     Vector<float> get_translation() override { return m_transform_mat.block(3, 1, 0, 3).to_vec_1x3(); }
-
-    // virtual std::vector<Vector<float>> get_normals() override;
-    virtual Vector<float> get_normal(const Vector<float> &point) override;
+    Vector<float> get_normal(const Vector<float> &point) override;
+    Vector<float> get_origin() const override { return m_origin; }
+    int get_id() const override { return m_id; }
 
     // scale the object up or down
-    virtual void scale(const Vector<float> &scale_vec) override;
-
-    // returns the origin of the object
-    Vector<float> get_origin() const override { return m_origin; }
-
-    // returns the id of the object
-    int get_id() const override { return m_id; }
+    void scale(const Vector<float> &scale_vec) override;
 
     void set_material(ray_tracer::materials::BaseMaterial &material) override;
     ray_tracer::materials::BaseMaterial get_assigned_material() const override { return m_material; };

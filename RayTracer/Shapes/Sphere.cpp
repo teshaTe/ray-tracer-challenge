@@ -11,7 +11,6 @@ Sphere::Sphere(const float radius, const int id): m_radius(radius),
                                                   m_origin(Vector<float>{0, 0, 0})
 {
     m_transform_mat.I();
-    // m_transform_mat = m_transform_mat.mul(m_mat_utils.scaling_mat(radius, radius, radius));
     m_transform_mat = m_mat_utils.scaling_mat(radius, radius, radius).mul(m_transform_mat);
     m_transform_mat(3, 3) = 1;
 
@@ -20,20 +19,12 @@ Sphere::Sphere(const float radius, const int id): m_radius(radius),
 
 void Sphere::transform(Matrix<float> &transform)
 {
-    // m_transform_mat = m_transform_mat.mul(transform);
     m_transform_mat = transform.mul(m_transform_mat);
     m_origin = m_transform_mat.block(3, 1, 0, 3).to_vec_1x3();
 }
 
 Vector<float> Sphere::get_normal(const Vector<float> &point)
 {
-    // Matrix<float> inv_obj_tr = m_transform_mat.inv();
-    // Vector<float> obj_point = inv_obj_tr.mul(point).to_vec_1x3();
-    // Vector<float> normal = (obj_point - Vector<float>{0, 0, 0}).to_1x4();
-    // Vector<float> world_normal = inv_obj_tr.tr().mul(normal).to_vec_1x3();
-
-    // return world_normal.normalize();
-
     Matrix<float> inv_obj_tr = m_transform_mat.inv();
     Vector<float> obj_point = inv_obj_tr.mul(point).to_vec_1x3();
     Vector<float> normal = Vector<float>{obj_point[0], obj_point[1], obj_point[2], 0};
@@ -52,13 +43,11 @@ void Sphere::set_material(materials::BaseMaterial &material)
     m_material = material;
 }
 
-std::vector<types::intersection> Sphere::intersect(Ray &ray)
+std::vector<types::intersection> Sphere::m_local_intersect(Ray &ray)
 {
-    Ray tr_ray = ray.transform(m_transform_mat);
-
-    Vector<float> sphere_to_ray_vec = tr_ray.get_origin() - Vector<float>{0, 0, 0};
-    float a = tr_ray.get_direction().dot(tr_ray.get_direction());
-    float b = 2.0f * tr_ray.get_direction().dot(sphere_to_ray_vec);
+    Vector<float> sphere_to_ray_vec = ray.get_origin() - Vector<float>{0, 0, 0};
+    float a = ray.get_direction().dot(ray.get_direction());
+    float b = 2.0f * ray.get_direction().dot(sphere_to_ray_vec);
     float c = sphere_to_ray_vec.dot(sphere_to_ray_vec) - 1.0f;
 
     std::vector<types::intersection> intersections_out;
@@ -87,6 +76,13 @@ std::vector<types::intersection> Sphere::intersect(Ray &ray)
         }
         return intersections_out;
     }
+}
+
+std::vector<types::intersection> Sphere::intersect(Ray &ray)
+{
+    Ray tr_ray = ray.transform(m_transform_mat);
+    std::vector<types::intersection> intersections = m_local_intersect(tr_ray);
+    return intersections;
 }
 
 } // namespace ray_tracer::shapes
