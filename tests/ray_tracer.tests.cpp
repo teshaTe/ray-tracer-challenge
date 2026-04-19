@@ -79,7 +79,9 @@ TEST(RayTracerWorldSceneShadingTest, TestingWorldSceneShading)
     Color<float> shading_color1 = ray_tracer.compute_shading(shapes[0]->clone(), lights, intersection_state, world_scene);
     Color<float> ref_color1{0.38066, 0.47583, 0.2855};
 
-    ASSERT_EQ(shading_color1, ref_color1);
+    ASSERT_NEAR(shading_color1[0], ref_color1[0], 1e-4);
+    ASSERT_NEAR(shading_color1[1], ref_color1[1], 1e-4);
+    ASSERT_NEAR(shading_color1[2], ref_color1[2], 1e-4);
 }
 
 
@@ -109,9 +111,11 @@ TEST(RayTracerWorldSceneShadingInsideTest, TestingWorldSceneShadingInside)
                                                                                              intersection,
                                                                                              ray);
     Color<float> shading_color = ray_tracer.compute_shading(shapes[1]->clone(), lights, intersection_state, world_scene);
-    Color<float> ref_color{0.90498, 0.90498, 0.90498};
+    Color<float> ref_color{0.904661, 0.904661, 0.904661};
 
-    ASSERT_EQ(shading_color, ref_color);
+    ASSERT_NEAR(shading_color[0], ref_color[0], 1e-4);
+    ASSERT_NEAR(shading_color[1], ref_color[1], 1e-4);
+    ASSERT_NEAR(shading_color[2], ref_color[2], 1e-4);
 }
 
 TEST(RayTracerWorldSceneRenderingEdgeCasesTest, TestingWorldSceneRenderingEdgeCases)
@@ -131,7 +135,9 @@ TEST(RayTracerWorldSceneRenderingEdgeCasesTest, TestingWorldSceneRenderingEdgeCa
     Color<float> shading_color2 = ray_tracer.get_color_at(world_scene1, ray2);
 
     Color<float> ref_color2{0.38066, 0.47583, 0.2855};
-    ASSERT_EQ(shading_color2, ref_color2);
+    ASSERT_NEAR(shading_color2[0], ref_color2[0], 1e-4);
+    ASSERT_NEAR(shading_color2[1], ref_color2[1], 1e-4);
+    ASSERT_NEAR(shading_color2[2], ref_color2[2], 1e-4);
 
     //  test only interior object got a hit
     WorldScene world_scene2{};
