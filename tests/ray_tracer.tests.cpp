@@ -28,7 +28,7 @@ TEST(RayTracerShadingTest, TestingShading)
     Vector<float> normal1{0, 0, -1};
 
     lights::PointLight plight1{Vector<float>{0, 0, -10}, Color<float>{1, 1, 1}, 0};
-    RayTracer ray_tracer;
+    RayTracer ray_tracer{};
 
     Color<float> resutl1 = ray_tracer.compute_lightning(mat1, plight1, position1, eye_dir1, normal1, false);
     Color<float> ref1{1.9, 1.9, 1.9};
