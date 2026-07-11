@@ -1,7 +1,8 @@
-#ifndef MATERIAL_HPP
+            #ifndef MATERIAL_HPP
 #define MATERIAL_HPP
 
 #include "Containers/Color.hpp"
+#include "Core/Patterns.hpp"
 
 
 namespace ray_tracer::materials {
@@ -12,6 +13,7 @@ namespace ray_tracer::materials {
 struct BaseMaterial
 {
     Color<float> color{1, 1, 1};
+    BasePattern *pattern = nullptr;
     float ambient = 0.1;
     float diffuse = 0.9;
     float specular = 0.9;
