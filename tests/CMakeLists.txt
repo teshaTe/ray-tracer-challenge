@@ -71,3 +71,8 @@ add_executable(camera_test camera.tests.cpp)
 target_include_directories(camera_test PUBLIC "${PROJECT_ROOT_DIR}/RayTracer" "${PROJECT_ROOT_DIR}")
 target_link_libraries(camera_test PRIVATE GTest::GTest core_lib)
 add_test(camera_gtest camera_test)
+
+add_executable(texture_patterns_test texture_patterns.tests.cpp)
+target_include_directories(texture_patterns_test PUBLIC "${PROJECT_ROOT_DIR}/RayTracer" "${PROJECT_ROOT_DIR}")
+target_link_libraries(texture_patterns_test PRIVATE GTest::GTest core_lib lights_lib)
+add_test(texture_patterns_gtest texture_patterns_test)
