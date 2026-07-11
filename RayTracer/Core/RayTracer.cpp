@@ -25,8 +25,14 @@ Color<float> RayTracer::compute_lightning(materials::BaseMaterial &material,
                                           Vector<float> &normal,
                                           const bool &in_shadow)
 {
+    Color<float> color;
+    if(material.pattern!=nullptr)
+        color = material.pattern->pattern_at(point);
+    else
+        color = material.color;
+
     // combine the surface color with the light's color/intensity
-    Color<float> effective_color = material.color.hadamard_product(light.get_intensity());
+    Color<float> effective_color = color.hadamard_product(light.get_intensity());
 
     // compute the ambient contribution
     Color<float> ambient = effective_color * material.ambient;
