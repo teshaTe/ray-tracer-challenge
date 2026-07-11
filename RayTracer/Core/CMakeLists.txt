@@ -19,6 +19,7 @@ set(RAYTRACER_HEADERS Canvas.hpp
                       Shape.h
                       Light.hpp
                       Material.hpp
+                      Patterns.hpp
                       WorldScene.h
                   )
 
