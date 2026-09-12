@@ -1,10 +1,13 @@
 #include <gtest/gtest.h>
 #include "Containers/Color.hpp"
 #include "Containers/Vector.hpp"
+#include "Containers/Matrix.hpp"
+#include "Core/MatrixUtils.hpp"
 #include "Core/Patterns.hpp"
 #include "Core/Material.hpp"
 #include "Lights/point_light.h"
 #include "Core/RayTracer.h"
+#include "Shapes/Sphere.h"
 
 
 using namespace ray_tracer;
@@ -61,14 +64,35 @@ TEST(StrippedPatternMaterial, TestingStripPatern_material)
 
     lights::PointLight plight{Vector<float>{0, 0, -10}, Color<float>{1, 1, 1}, 0};
     RayTracer ray_tracer{};
+    Matrix<float> tr{4, 4};
+    tr.I();
 
     Vector<float> p1 = Vector<float>{0.9, 0, 0};
-    Color<float> c1 = ray_tracer.compute_lightning(mat1, plight, p1, eye_dir, normal, false);
+    Color<float> c1 = ray_tracer.compute_lightning(mat1, plight, p1, eye_dir, normal, false, &tr);
     Vector<float> p2 = Vector<float>{1.1, 0, 0};
-    Color<float> c2 = ray_tracer.compute_lightning(mat1, plight, p2, eye_dir, normal, false);
+    Color<float> c2 = ray_tracer.compute_lightning(mat1, plight, p2, eye_dir, normal, false, &tr);
 
     ASSERT_EQ(c1, white);
     ASSERT_EQ(c2, black);
+}
+
+TEST(StrippedPatternMaterialTransformation, TestingStripPatern_material_transformation)
+{
+    const Color<float> white{1, 1, 1};
+    const Color<float> black{0, 0, 0};
+
+    MatrixUtlities mat_utils{};
+    Matrix<float> tr1{4, 4};
+    tr1 = mat_utils.scaling_mat(2, 2, 2);
+
+    StripePattern pattern1{white, black};
+    Color<float> res_col1 = pattern1.pattern_at_object(tr1, Vector<float>{1.5, 0, 0});
+    ASSERT_EQ(res_col1, white);
+
+    StripePattern pattern2{white, black};
+    pattern2.set_pattern_transform(tr1);
+    Color<float> res_col2 = pattern2.pattern_at_object(tr1, Vector<float>{1.5, 0, 0});
+    ASSERT_EQ(res_col2, white);
 }
 
 
