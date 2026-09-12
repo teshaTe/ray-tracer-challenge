@@ -7,6 +7,7 @@
 #include "RayTracer/Lights/point_light.h"
 #include "RayTracer/Shapes/Sphere.h"
 #include "RayTracer/Shapes/Plane.h"
+#include "RayTracer/Core/Patterns.hpp"
 
 
 using namespace ray_tracer;
@@ -70,7 +71,9 @@ int main(int argc, char *argv[])
     sphere3.transform(sphere3_tr);
 
     materials::BaseMaterial sphere3_mat;
-    sphere3_mat.color = Color<float>{1.0, 0.8, 0.1};
+    // sphere3_mat.color = Color<float>{1.0, 0.8, 0.1};
+    StripePattern pattern{Color<float>{1.0, 0.8, 0.1}, Color<float>{1, 1, 1}};
+    sphere3_mat.pattern = &pattern;
     sphere3_mat.diffuse = 0.7;
     sphere3_mat.specular = 0.3;
     sphere3.set_material(sphere3_mat);
