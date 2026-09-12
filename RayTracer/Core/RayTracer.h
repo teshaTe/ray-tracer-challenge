@@ -29,7 +29,8 @@ public:
                                    Vector<float> &point,
                                    Vector<float> &eye_dir,
                                    Vector<float> &normal,
-                                   const bool &in_shadow);
+                                   const bool &in_shadow,
+                                   Matrix<float> *shape_tr=nullptr);
 
     const bool is_shadowed(lights::Light &light, WorldScene &world, Vector<float> &point);
 

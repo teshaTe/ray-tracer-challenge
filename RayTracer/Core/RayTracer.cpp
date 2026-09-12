@@ -23,11 +23,12 @@ Color<float> RayTracer::compute_lightning(materials::BaseMaterial &material,
                                           Vector<float> &point,
                                           Vector<float> &eye_dir,
                                           Vector<float> &normal,
-                                          const bool &in_shadow)
+                                          const bool &in_shadow,
+                                          Matrix<float> *shape_tr)
 {
     Color<float> color;
-    if(material.pattern!=nullptr)
-        color = material.pattern->pattern_at(point);
+    if(material.pattern != nullptr && shape_tr != nullptr)
+        color = material.pattern->pattern_at_object(*shape_tr, point);
     else
         color = material.color;
 
@@ -109,12 +110,14 @@ Color<float> RayTracer::compute_shading(std::unique_ptr<shapes::Shape> shape,
     {
         materials::BaseMaterial material = shape.get()->get_assigned_material();
         bool is_shadowed_pt = is_shadowed(*lights[j], world_scene, intersection_state.over_point);
+        Matrix<float> shape_tr = shape->get_transform();
         Color<float> color = compute_lightning(material,
                                                *lights[j],
                                                intersection_state.over_point,
                                                intersection_state.eye_dir,
                                                intersection_state.normal,
-                                               is_shadowed_pt);
+                                               is_shadowed_pt,
+                                               &shape_tr);
         final_color = final_color + color;
     }
 
