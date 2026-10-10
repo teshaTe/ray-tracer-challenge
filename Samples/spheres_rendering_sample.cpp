@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
 {
     // creating scene floor
     shapes::Plane floor{0};
+
     materials::BaseMaterial floor_mat;
     floor_mat.color = Color<float>{1., 0.9, 0.9};
     floor_mat.specular = 0.0;
@@ -46,8 +47,10 @@ int main(int argc, char *argv[])
     Matrix<float> sphere1_tr = mat_utils.translation_mat(-0.5, 1.0, 0.5);
     sphere1.transform(sphere1_tr);
 
+    RingPattern pattern1{Color<float>{0.1, 1.0, 0.5}, Color<float>{1, 1, 1}};
     materials::BaseMaterial sphere1_mat;
-    sphere1_mat.color = Color<float>{0.1, 1, 0.5};
+    //sphere1_mat.color = Color<float>{0.1, 1, 0.5};
+    sphere1_mat.pattern = &pattern1;
     sphere1_mat.diffuse = 0.7;
     sphere1_mat.specular = 0.3;
     sphere1.set_material(sphere1_mat);
@@ -58,8 +61,10 @@ int main(int argc, char *argv[])
                                mul(mat_utils.scaling_mat(0.5, 0.5, 0.5));
     sphere2.transform(sphere2_tr);
 
+    CheckerPattern pattern2{Color<float>{0.5, 1, 0.1}, Color<float>{1, 1, 1}};
     materials::BaseMaterial sphere2_mat;
-    sphere2_mat.color = Color<float>{0.5, 1, 0.1};
+    // sphere2_mat.color = Color<float>{0.5, 1, 0.1};
+    sphere2_mat.pattern = &pattern2;
     sphere2_mat.diffuse = 0.7;
     sphere2_mat.specular = 0.3;
     sphere2.set_material(sphere2_mat);
@@ -70,10 +75,12 @@ int main(int argc, char *argv[])
                                mul(mat_utils.scaling_mat(0.33, 0.33, 0.33));
     sphere3.transform(sphere3_tr);
 
+//    StripePattern pattern3{Color<float>{1.0, 0.8, 0.1}, Color<float>{1, 1, 1}};
+    GradientPattern pattern3{Color<float>{0.2, 0.0, 0.5}, Color<float>{1, 1, 1}};
+
     materials::BaseMaterial sphere3_mat;
     // sphere3_mat.color = Color<float>{1.0, 0.8, 0.1};
-    StripePattern pattern{Color<float>{1.0, 0.8, 0.1}, Color<float>{1, 1, 1}};
-    sphere3_mat.pattern = &pattern;
+    sphere3_mat.pattern = &pattern3;
     sphere3_mat.diffuse = 0.7;
     sphere3_mat.specular = 0.3;
     sphere3.set_material(sphere3_mat);
