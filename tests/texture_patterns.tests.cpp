@@ -96,6 +96,77 @@ TEST(StrippedPatternMaterialTransformation, TestingStripPatern_material_transfor
 }
 
 
+TEST(GradientPatternMaterial, TestingGradientPatternMaterial)
+{
+    const Color<float> white{1, 1, 1};
+    const Color<float> black{0, 0, 0};
+
+    GradientPattern grad_pattern{white, black};
+    Color<float> test_val1 = grad_pattern.pattern_at(Vector<float>{0.25, 0, 0});
+    Color<float> test_val2 = grad_pattern.pattern_at(Vector<float>{0.5, 0, 0});
+    Color<float> test_val3 = grad_pattern.pattern_at(Vector<float>{0.75, 0, 0});
+
+    const Color<float> ref_col1{0.75, 0.75, 0.75};
+    const Color<float> ref_col2{0.5, 0.5, 0.5};
+    const Color<float> ref_col3{0.25, 0.25, 0.25};
+
+    ASSERT_EQ(test_val1, ref_col1);
+    ASSERT_EQ(test_val2, ref_col2);
+    ASSERT_EQ(test_val3, ref_col3);
+}
+
+TEST(RingPatternMaterial, TestingRingPatternMaterial)
+{
+    const Color<float> white{1, 1, 1};
+    const Color<float> black{0, 0, 0};
+
+    RingPattern ring_pattern{white, black};
+    Color<float> test_val1 = ring_pattern.pattern_at(Vector<float>{0, 0, 0});
+    Color<float> test_val2 = ring_pattern.pattern_at(Vector<float>{1.0, 0, 0});
+    Color<float> test_val3 = ring_pattern.pattern_at(Vector<float>{0.0, 0, 1.0});
+    Color<float> test_val4 = ring_pattern.pattern_at(Vector<float>{0.708, 0, 0.708});
+
+    ASSERT_EQ(test_val1, white);
+    ASSERT_EQ(test_val2, black);
+    ASSERT_EQ(test_val3, black);
+    ASSERT_EQ(test_val4, black);
+}
+
+TEST(CheckerBoxPatternMaterial, TestingCheckerBoxPatternMaterial)
+{
+    const Color<float> white{1, 1, 1};
+    const Color<float> black{0, 0, 0};
+
+    CheckerPattern checker_pattern{white, black};
+    // pattern should repeat along x axis
+    Color<float> test_val1 = checker_pattern.pattern_at(Vector<float>{0, 0, 0});
+    Color<float> test_val2 = checker_pattern.pattern_at(Vector<float>{0.99, 0, 0});
+    Color<float> test_val3 = checker_pattern.pattern_at(Vector<float>{1.01, 0, 0});
+
+    ASSERT_EQ(test_val1, white);
+    ASSERT_EQ(test_val2, white);
+    ASSERT_EQ(test_val3, black);
+
+    // pattern should repeat along y axis
+    Color<float> test_val4 = checker_pattern.pattern_at(Vector<float>{0, 0, 0});
+    Color<float> test_val5 = checker_pattern.pattern_at(Vector<float>{0, 0.99, 0});
+    Color<float> test_val6 = checker_pattern.pattern_at(Vector<float>{0, 1.01, 0});
+
+    ASSERT_EQ(test_val4, white);
+    ASSERT_EQ(test_val5, white);
+    ASSERT_EQ(test_val6, black);
+
+    // pattern should repeat along Z axis
+    Color<float> test_val7 = checker_pattern.pattern_at(Vector<float>{0, 0, 0});
+    Color<float> test_val8 = checker_pattern.pattern_at(Vector<float>{0, 0, 0.99});
+    Color<float> test_val9 = checker_pattern.pattern_at(Vector<float>{0, 0, 1.01});
+
+    ASSERT_EQ(test_val7, white);
+    ASSERT_EQ(test_val8, white);
+    ASSERT_EQ(test_val9, black);
+}
+
+
 int main(int argc, char *argv[])
 {
     ::testing::InitGoogleTest(&argc, argv);
