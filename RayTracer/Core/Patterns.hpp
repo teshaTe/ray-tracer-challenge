@@ -45,5 +45,52 @@ struct StripePattern: BasePattern
     }
 };
 
+
+struct GradientPattern: BasePattern
+{
+    using BasePattern::BasePattern;
+
+    Color<float> pattern_at(const Vector<float> &point)
+    {
+        Color<float> distance = color2 - color1;
+        // float fraction = point[0] - std::floor(point[0]);
+        float fraction = 1.0 - std::abs(fmod(point[0], 2) - 1.0);
+        Color<float> final_color = color1 + distance * fraction;
+        return final_color;
+    }
+};
+
+
+struct RingPattern: BasePattern
+{
+    using BasePattern::BasePattern;
+
+    Color<float> pattern_at(const Vector<float> &point)
+    {
+        float distance = std::sqrt(point[0]*point[0] + point[2]*point[2]);
+        int n = static_cast<int>(std::floor(distance));
+        if(n % 2 == 0)
+            return color1;
+        else
+            return color2;
+    }
+};
+
+
+struct CheckerPattern: BasePattern
+{
+    using BasePattern::BasePattern;
+
+    Color<float> pattern_at(const Vector<float> &point)
+    {
+        float mod = std::floor(point[0]) + std::floor(point[1]) + std::floor(point[2]);
+        int n = static_cast<int>(mod);
+        if(n % 2 == 0)
+            return color1;
+        else
+            return color2;
+    }
+};
+
 } // namespace raytracer
 #endif // PATTERNS_H
